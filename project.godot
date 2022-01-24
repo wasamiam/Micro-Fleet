@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Object",
+"class": "Ship_Generator",
+"language": "GDScript",
+"path": "res://utility_scripts/ship_generator.gd"
+} ]
+_global_script_class_icons={
+"Ship_Generator": ""
+}
+
 [application]
 
 config/name="Micro Fleet"

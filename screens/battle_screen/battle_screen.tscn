@@ -141,7 +141,7 @@ layer = -100
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 90.9194, 188.574 )
 frames = SubResource( 2 )
-frame = 36
+frame = 29
 playing = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -181,6 +181,12 @@ __meta__ = {
 
 [node name="AllyFighterStartPosition1" type="Position2D" parent="."]
 position = Vector2( 123.477, 300.923 )
+__meta__ = {
+"_gizmo_extents_": 728.4
+}
+
+[node name="EnemyFighterStartPosition2" type="Position2D" parent="."]
+position = Vector2( 902.465, 300.923 )
 __meta__ = {
 "_gizmo_extents_": 728.4
 }

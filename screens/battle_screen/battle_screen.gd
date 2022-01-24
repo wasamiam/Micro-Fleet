@@ -4,12 +4,17 @@ var cr90 = preload("res://ships/capital_ships/cr90.tscn")
 var raider = preload("res://ships/capital_ships/raider_corvette.tscn")
 var x_wing = preload("res://ships/fighters/x_wing.tscn")
 
+# Track next available position in ship formation.
+var allies_formation
+var enemies_formation
+
 onready var allies = {"cr90":2}
 onready var enemies = {"raider":1}
 onready var max_capital_ships = 5
 
 func _ready():
 	setup_battlefield()
+	start_battle()
 
 func setup_battlefield():
 	add_ships(allies, "allies")
@@ -17,45 +22,50 @@ func setup_battlefield():
 	for i in get_tree().get_nodes_in_group("ships"):
 		_find_target(i)
 		i.set_physics_process(false)
+
+func start_battle():
 	get_node("AnimationPlayer").play("CameraZoomIntro")
 
 func add_ships(ships:Dictionary, group_side:String):
-
-	var ship_position_name:String
-	
 	for i in ships:
-		var packaged_ship
-		var formation_position = 1
 		match i:
 			"cr90":
-				packaged_ship = cr90
+				add_ship(cr90, ships[i], group_side, "capital_ships")
 			"x_wing":
-				packaged_ship = x_wing
+				add_ship(x_wing, ships[i], group_side, "fighters")
 			"raider":
-				packaged_ship = raider
+				add_ship(raider, ships[i], group_side, "capital_ships")
+
+func add_ship(packed_ship:PackedScene, amount:int, group_side:String, group_type:String):
+	for n in amount:
+		var ship_position_name
+		var ship = packed_ship.instance()
+		if group_side == "enemies":
+			ship.rotate(deg2rad(180.0))
+			ship_position_name = "EnemyStartPosition"
+		else:
+			ship_position_name = "AllyStartPosition"
 		
-		for n in ships[i]:
-			var ship = packaged_ship.instance()
-			if group_side == "enemies":
-				ship.rotate(deg2rad(180.0))
-				ship_position_name = "EnemyStartPosition"
-			else:
-				ship_position_name = "AllyStartPosition"
-			
-			ship.add_to_group(group_side)
-			add_ship(ship, "capital_ships", get_node(ship_position_name + String(formation_position)).global_position)
-			formation_position = clamp(formation_position + 1, 1, max_capital_ships)
+		ship.add_to_group("ships")
+		ship.add_to_group(group_side)
+		ship.add_to_group(group_type)
+		
+		ship.position = get_next_formation_position(group_side)
+		ship.connect("find_target", self, "_find_target")
+		add_child(ship)
 
-
-func add_ship(ship:Node, group:String, p_position:Vector2):
-	ship.add_to_group("ships")
-	ship.add_to_group(group)
-	ship.position = p_position
-	ship.connect("find_target", self, "_find_target")
-	add_child(ship)
-
-# Return position vector based on 
-
+func get_next_formation_position(group_side:String, ship_size:Vector2):
+	var position_vector = Vector2.ZERO
+	var start_position = Vector2.ZERO
+	
+	if group_side == "allies":
+		start_position = get_node("AllyStartPosition").global_position
+	else:
+		start_position = get_node("EnemyStartPosition").global_position
+	
+	
+	
+	return position_vector
 
 func _find_target(targeting_ship:Node):
 	if !"target" in targeting_ship:

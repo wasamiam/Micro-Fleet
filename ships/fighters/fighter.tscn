@@ -3,5 +3,5 @@
 [ext_resource path="res://ships/fighters/fighter.gd" type="Script" id=1]
 [ext_resource path="res://ships/ship.tscn" type="PackedScene" id=2]
 
-[node name="RigidBody2D" instance=ExtResource( 2 )]
+[node name="Fighter" instance=ExtResource( 2 )]
 script = ExtResource( 1 )
