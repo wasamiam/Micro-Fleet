@@ -24,16 +24,39 @@ config/name="Micro Fleet"
 run/main_scene="res://screens/main_menu/main_menu.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+FileManager="*res://globals/file_manager.gd"
+Navigator="*res://globals/navigator.gd"
+Main="*res://globals/main.gd"
+
 [display]
 
-window/size/height=768
+window/size/width=720
+window/size/height=1080
+window/handheld/orientation="portrait"
 window/stretch/mode="2d"
-window/stretch/aspect="keep_width"
+window/stretch/aspect="expand"
 
 [gui]
 
 theme/custom="res://themes/main_theme.tres"
 theme/custom_font="res://themes/fonts/retro_gaming_main.tres"
+
+[layer_names]
+
+2d_physics/layer_1="battleship_ally"
+2d_physics/layer_2="battleship_enemy"
+2d_physics/layer_3="cruiser_ally"
+2d_physics/layer_4="cruiser_enemy"
+2d_physics/layer_5="corvette_ally"
+2d_physics/layer_6="corvette_enemy"
+2d_physics/layer_7="bomber_ally"
+2d_physics/layer_8="bomber_enemy"
+2d_physics/layer_9="fighter_ally"
+2d_physics/layer_10="fighter_enemy"
+2d_physics/layer_11="bullet_ally"
+2d_physics/layer_12="bullet_enemy"
 
 [physics]
 

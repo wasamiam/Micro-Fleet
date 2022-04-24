@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tie_fighter.png-928574d03f217725fbb5054022c6f1eb.stex"
+path="res://.import/light_cruiser.png-23ad7e6ab2ac50d9df0de2489401c95b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/tie_fighter.png"
-dest_files=[ "res://.import/tie_fighter.png-928574d03f217725fbb5054022c6f1eb.stex" ]
+source_file="res://images/light_cruiser.png"
+dest_files=[ "res://.import/light_cruiser.png-23ad7e6ab2ac50d9df0de2489401c95b.stex" ]
 
 [params]
 

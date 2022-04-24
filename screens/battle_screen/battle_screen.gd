@@ -1,129 +1,116 @@
-extends Node2D
+extends Node
 
-var cr90 = preload("res://ships/capital_ships/cr90.tscn")
-var raider = preload("res://ships/capital_ships/raider_corvette.tscn")
-var x_wing = preload("res://ships/fighters/x_wing.tscn")
+
+var end_screen_packed = preload("res://screens/end_condition_screens/lose_screen.tscn")
+
+var home_one = preload("res://ships/battleships/ally/home_one.tscn")
+var star_destroyer = preload("res://ships/battleships/enemy/star_destroyer.tscn")
+var nebulon_b = preload("res://ships/cruisers/ally/nebulon_b.tscn")
+var light_cruiser = preload("res://ships/cruisers/enemy/light_cruiser.tscn")
+var cr90 = preload("res://ships/corvettes/ally/cr90.tscn")
+var raider = preload("res://ships/corvettes/enemy/raider.tscn")
 
 # Track next available position in ship formation.
 var allies_formation
 var enemies_formation
 
-onready var allies = {"cr90":2}
-onready var enemies = {"raider":1}
-onready var max_capital_ships = 5
-
 func _ready():
+	get_node("GUILayer/BattleDebrief").hide()
+	get_tree().paused = false
 	setup_battlefield()
-	start_battle()
 
 func setup_battlefield():
-	add_ships(allies, "allies")
-	add_ships(enemies, "enemies")
+	add_ships(Main.fleet)
+	add_ships(Main.enemy_fleet)
 	for i in get_tree().get_nodes_in_group("ships"):
 		_find_target(i)
-		i.set_physics_process(false)
+		i.firing = true
 
-func start_battle():
-	get_node("AnimationPlayer").play("CameraZoomIntro")
-
-func add_ships(ships:Dictionary, group_side:String):
+# Instead of splitting ships in ally and enemy ship types, ships are dynamically made ally or enemy, so any ship can be used.
+func add_ships(ships:Dictionary):
 	for i in ships:
 		match i:
+			"home_one":
+				add_ship(home_one, "battleship", "ally", ships[i])
+			"star_destroyer":
+				add_ship(star_destroyer, "battleship", "enemy", ships[i])
+			"nebulon_b":
+				add_ship(nebulon_b, "cruiser", "ally", ships[i])
+			"light_cruiser":
+				add_ship(light_cruiser, "cruiser", "enemy", ships[i])
 			"cr90":
-				add_ship(cr90, ships[i], group_side, "capital_ships")
-			"x_wing":
-				add_ship(x_wing, ships[i], group_side, "fighters")
+				add_ship(cr90, "corvette", "ally", ships[i])
 			"raider":
-				add_ship(raider, ships[i], group_side, "capital_ships")
+				add_ship(raider, "corvette", "enemy", ships[i])
 
-func add_ship(packed_ship:PackedScene, amount:int, group_side:String, group_type:String):
-	for n in amount:
-		var ship_position_name
-		var ship = packed_ship.instance()
-		if group_side == "enemies":
-			ship.rotate(deg2rad(180.0))
-			ship_position_name = "EnemyStartPosition"
-		else:
-			ship_position_name = "AllyStartPosition"
-		
-		ship.add_to_group("ships")
-		ship.add_to_group(group_side)
-		ship.add_to_group(group_type)
-		
-		ship.position = get_next_formation_position(group_side)
-		ship.connect("find_target", self, "_find_target")
-		add_child(ship)
+func add_ship(packed_ship:PackedScene, ship_type:String, ship_side, amount):
+	var ship = packed_ship.instance()
+	
+	ship.add_to_group("ships")
+	ship.add_to_group(ship_type)
+	ship.add_to_group(ship_side)
+	
+	ship.amount = amount
+	ship.position = get_formation_position(ship_type, ship_side)
+	ship.connect("check_for_win_condition", self, "check_for_win_condition")
+	ship.connect("find_target", self, "_find_target")
+	add_child(ship)
 
-func get_next_formation_position(group_side:String, ship_size:Vector2):
-	var position_vector = Vector2.ZERO
-	var start_position = Vector2.ZERO
-	
-	if group_side == "allies":
-		start_position = get_node("AllyStartPosition").global_position
-	else:
-		start_position = get_node("EnemyStartPosition").global_position
-	
-	
-	
-	return position_vector
+func get_formation_position(ship_type, ship_side):
+	match ship_type:
+		"battleship":
+			if ship_side == "ally":
+				return get_node("BattleshipAlly").position
+			else:
+				return get_node("BattleshipEnemy").position
+		"cruiser":
+			if ship_side == "ally":
+				return get_node("CruiserAlly").position
+			else:
+				return get_node("CruiserEnemy").position
+		"corvette":
+			if ship_side == "ally":
+				return get_node("CorvetteAlly").position
+			else:
+				return get_node("CorvetteEnemy").position
 
 func _find_target(targeting_ship:Node):
-	if !"target" in targeting_ship:
-		return
+	var target_side
+	if targeting_ship.is_in_group("ally"):
+		target_side = "enemy"
+	if targeting_ship.is_in_group("enemy"):
+		target_side = "ally"
 	
-	var side = "allies" if targeting_ship.is_in_group("allies") else "enemies"
-	
-	var targets = []
-	
-	if targeting_ship.is_in_group("capital_ships"):
-		targets = get_tree().get_nodes_in_group("capital_ships")
-	elif targeting_ship.is_in_group("fighter"):
-		targets = get_tree().get_nodes_in_group("bombers")
+	for i in targeting_ship.order_of_attack:
+		var targets = get_tree().get_nodes_in_group(i)
 		if targets.empty():
-			targets = get_tree().get_nodes_in_group("fighter_bombers")
-		if targets.empty():
-			targets = get_tree().get_nodes_in_group("fighters")
-	elif targeting_ship.is_in_group("fighter/bomber"):
-		targets = get_tree().get_nodes_in_group("bombers")
-		if targets.empty():
-			targets = get_tree().get_nodes_in_group("fighter_bombers")
-		if targets.empty():
-			targets = get_tree().get_nodes_in_group("fighters")
-		if targets.empty():
-			targets = get_tree().get_nodes_in_group("capital_ships")
-	elif targeting_ship.is_in_group("bomber"):
-		targets = get_tree().get_nodes_in_group("capital_ships")
-		if targets.empty():
-			targets = get_tree().get_nodes_in_group("bombers")
-		if targets.empty():
-			targets = get_tree().get_nodes_in_group("fighter_bombers")
-		if targets.empty():
-			targets = get_tree().get_nodes_in_group("fighters")
-	else:
-		if targets.empty():
-			return
-	
-	var final_targets = []
-	for i in targets:
-		if i.is_in_group(side):
 			continue
-		else:
-			final_targets.append(i)
+		for j in targets:
+			if j.is_in_group(target_side):
+				targeting_ship.target = j
+				return
 	
-	var closest_target = final_targets.pop_front()
-	for i in final_targets:
-		if targeting_ship.global_position.distance_to(i.global_position) < targeting_ship.global_position.distance_to(closest_target.global_position):
-			closest_target = i
+	targeting_ship.firing = false
+
+func lose_condition():
+	get_tree().change_scene_to(end_screen_packed)
+
+# Check if ship sending signal is last to be destoryed.
+func check_for_win_condition(ship):
+	if ship.is_in_group("enemy") and get_tree().get_nodes_in_group("enemy").size() == 1:
+		get_tree().paused = true
+		if Main.level == Main.final_level:
+			Main.win_condition()
+		get_node("GUILayer/BattleDebrief").show()
+	elif ship.is_in_group("ally") and get_tree().get_nodes_in_group("ally").size() == 1:
+		lose_condition()
+
+func add_ship_to_fleet():
+	if !Main.fleet.has("cr90"):
+		Main.fleet["cr90"] = 1
+	else:
+		Main.fleet["cr90"] += 1
+	Main.level += 1
 	
-	targeting_ship.target = closest_target
-
-func _process(delta):
-	#get_node("Camera2D").zoom -= Vector2(0.02 * delta, 0.02 * delta)
-	#print(get_node("Camera2D").zoom)
-	pass
-
-
-func _on_AnimationPlayer_animation_finished(anim_name):
-	for i in get_tree().get_nodes_in_group("ships"):
-		i.set_physics_process(true)
-		i.firing = true
+	
+	Main.start_battle()

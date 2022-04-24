@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tie_fighter.png-928574d03f217725fbb5054022c6f1eb.stex"
+path="res://.import/nebulon_b_frigate.png-a8396eed4d620fdbb09922fc0b56047a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/tie_fighter.png"
-dest_files=[ "res://.import/tie_fighter.png-928574d03f217725fbb5054022c6f1eb.stex" ]
+source_file="res://images/nebulon_b_frigate.png"
+dest_files=[ "res://.import/nebulon_b_frigate.png-a8396eed4d620fdbb09922fc0b56047a.stex" ]
 
 [params]
 
