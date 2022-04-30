@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ships/turrets/bullet_turret.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ships/turrets/player/fire_spitter.gd" type="Script" id=2]
+[ext_resource path="res://ships/turrets/bullets/player_bullets/energy/yellow_blossom.tscn" type="PackedScene" id=3]
+
+[node name="FireSpitter" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+damage = 10.0
+bullet = ExtResource( 3 )
+
+[node name="Timer" parent="." index="0"]
+wait_time = 0.1
+
+[node name="Rotator" type="Node2D" parent="." index="1"]

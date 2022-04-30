@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://images/star_destroyer.png" type="Texture" id=1]
-[ext_resource path="res://ships/capital_ship.tscn" type="PackedScene" id=2]
-[ext_resource path="res://ships/turrets/bullets/enemy_bullet.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ships/ship.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ships/turrets/bullets/enemy_bullets/enemy_bullet.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ships/turrets/turret.tscn" type="PackedScene" id=4]
 
 [node name="RigidBody2D" instance=ExtResource( 2 )]

@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ships/enemy_ships/enemy_ship.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ships/turrets/enemy/xian_dart_launcher.tscn" type="PackedScene" id=3]
+[ext_resource path="res://images/enemies/xian/xian_dart.png" type="Texture" id=4]
+
+[node name="XianDart" instance=ExtResource( 1 )]
+max_health = 20.0
+
+[node name="CollisionPolygon2D" parent="." index="0"]
+polygon = PoolVector2Array( -12, -8, -10, -8, -5, -7, -2, -4, -1, -4, 1, -6, 8, -6, 10, -5, 12, -3, 12, 3, 10, 5, 8, 6, 1, 6, -1, 4, -2, 4, -5, 7, -10, 8, -12, 8, -12, 7, -9, 4, -6, 1, -6, -1, -12, -7 )
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 4 )
+
+[node name="XianDartLauncher" parent="Turrets" index="0" instance=ExtResource( 3 )]

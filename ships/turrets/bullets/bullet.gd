@@ -11,8 +11,10 @@ func _process(delta):
 func _on_VisibilityNotifier2D_viewport_exited(viewport):
 	queue_free()
 
-
 func _on_Bullet_body_entered(body):
-	if "health" in body:
-		body.health -= damage
-		queue_free()
+	if body.has_method("apply_damage"):
+		body.apply_damage(damage)
+	queue_free()
+
+func _on_Bullet_area_entered(area):
+	queue_free()

@@ -1,5 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
+[ext_resource path="res://images/backgrounds/empty_stars.png" type="Texture" id=1]
+[ext_resource path="res://screens/battle_screen/parallax_background.gd" type="Script" id=2]
+[ext_resource path="res://themes/fonts/m3x6_header1.tres" type="DynamicFont" id=3]
+[ext_resource path="res://screens/battle_screen/level_up.gd" type="Script" id=4]
 [ext_resource path="res://screens/battle_screen/battle_screen.gd" type="Script" id=18]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -13,64 +17,79 @@ script = ExtResource( 18 )
 [node name="BackgroundLayer" type="CanvasLayer" parent="."]
 layer = -100
 
-[node name="ColorRect" type="ColorRect" parent="BackgroundLayer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0, 0, 0, 1 )
+[node name="ParallaxBackground" type="ParallaxBackground" parent="BackgroundLayer"]
+script = ExtResource( 2 )
+star_layer_speed = 20.0
 
-[node name="BattleshipAlly" type="Position2D" parent="."]
-position = Vector2( 352, 952 )
+[node name="ParallaxLayer" type="ParallaxLayer" parent="BackgroundLayer/ParallaxBackground"]
+motion_mirroring = Vector2( 1280, 0 )
 
-[node name="CruiserAlly" type="Position2D" parent="."]
-position = Vector2( 352, 824 )
+[node name="Sprite" type="Sprite" parent="BackgroundLayer/ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 1 )
+centered = false
 
-[node name="CorvetteAlly" type="Position2D" parent="."]
-position = Vector2( 352, 696 )
-
-[node name="AllyFighterStartPosition1" type="Position2D" parent="."]
-position = Vector2( 352, 568 )
-
-[node name="EnemyFighterStartPosition2" type="Position2D" parent="."]
-position = Vector2( 352, 512 )
-
-[node name="BattleshipEnemy" type="Position2D" parent="."]
-position = Vector2( 352, 128 )
-
-[node name="CruiserEnemy" type="Position2D" parent="."]
-position = Vector2( 352, 256 )
-
-[node name="CorvetteEnemy" type="Position2D" parent="."]
-position = Vector2( 352, 384 )
+[node name="BattleshipSpawn" type="Position2D" parent="."]
+position = Vector2( 320, 240 )
 
 [node name="GUILayer" type="CanvasLayer" parent="."]
 pause_mode = 2
 
+[node name="LevelUp" type="CenterContainer" parent="GUILayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 4 )
+
+[node name="PanelContainer" type="PanelContainer" parent="GUILayer/LevelUp"]
+margin_left = 287.0
+margin_top = 226.0
+margin_right = 353.0
+margin_bottom = 254.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUILayer/LevelUp/PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 65.0
+margin_bottom = 27.0
+
+[node name="Label" type="Label" parent="GUILayer/LevelUp/PanelContainer/VBoxContainer"]
+margin_right = 64.0
+margin_bottom = 22.0
+custom_fonts/font = ExtResource( 3 )
+text = "Level Up"
+align = 1
+
+[node name="Items" type="VBoxContainer" parent="GUILayer/LevelUp/PanelContainer/VBoxContainer"]
+margin_top = 26.0
+margin_right = 64.0
+margin_bottom = 26.0
+
 [node name="BattleDebrief" type="PanelContainer" parent="GUILayer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GUILayer/BattleDebrief"]
-margin_right = 720.0
-margin_bottom = 1080.0
+margin_right = 640.0
+margin_bottom = 480.0
 alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="GUILayer/BattleDebrief/VBoxContainer"]
-margin_top = 490.0
-margin_right = 720.0
-margin_bottom = 590.0
+margin_top = 190.0
+margin_right = 640.0
+margin_bottom = 290.0
 rect_min_size = Vector2( 0, 100 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GUILayer/BattleDebrief/VBoxContainer/PanelContainer"]
-margin_right = 720.0
+margin_right = 640.0
 margin_bottom = 100.0
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer"]
-margin_top = 38.0
-margin_right = 720.0
-margin_bottom = 61.0
+margin_top = 50.0
+margin_right = 640.0
+margin_bottom = 50.0
 alignment = 1
 
 [node name="Repair" type="Button" parent="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
@@ -82,9 +101,77 @@ rect_min_size = Vector2( 0, 50 )
 text = "Repair"
 
 [node name="BuyCorvette" type="Button" parent="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 293.0
-margin_right = 426.0
+visible = false
+margin_left = 157.0
+margin_right = 290.0
 margin_bottom = 23.0
 text = "Buy Corvette"
 
-[connection signal="pressed" from="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/BuyCorvette" to="." method="add_ship_to_fleet"]
+[node name="BuyCruiser" type="Button" parent="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+visible = false
+margin_left = 226.0
+margin_right = 345.0
+margin_bottom = 23.0
+text = "Buy Cruiser"
+
+[node name="BuyBattleship" type="Button" parent="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+visible = false
+margin_left = 287.0
+margin_right = 432.0
+margin_bottom = 23.0
+text = "Buy Battleship"
+
+[node name="EnemySpawnTop" type="ReferenceRect" parent="GUILayer"]
+anchor_right = 1.0
+margin_left = 96.0
+margin_top = 16.0
+margin_right = -96.0
+margin_bottom = 128.0
+
+[node name="EnemySpawnBottom" type="ReferenceRect" parent="GUILayer"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 96.0
+margin_top = -128.0
+margin_right = -96.0
+margin_bottom = -16.0
+
+[node name="EnemySpawnLeft" type="ReferenceRect" parent="GUILayer"]
+anchor_bottom = 1.0
+margin_left = -64.0
+margin_top = 216.0
+margin_right = -16.0
+margin_bottom = -216.0
+
+[node name="EnemySpawnRight" type="ReferenceRect" parent="GUILayer"]
+anchor_bottom = 1.0
+margin_left = 656.0
+margin_top = 216.0
+margin_right = 704.0
+margin_bottom = -216.0
+
+[node name="TimerLabel" type="Label" parent="GUILayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -20.0
+margin_right = 20.0
+margin_bottom = 21.0
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="DifficultyIncreaseTimer" type="Timer" parent="."]
+wait_time = 30.0
+
+[node name="LevelCompleteTimer" type="Timer" parent="."]
+wait_time = 60.0
+
+[connection signal="item_selected" from="GUILayer/LevelUp" to="." method="_on_LevelUp_item_selected"]
+[connection signal="pressed" from="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/BuyCorvette" to="." method="add_ship_to_fleet" binds= [ "cr90" ]]
+[connection signal="pressed" from="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/BuyCruiser" to="." method="add_ship_to_fleet" binds= [ "nebulon_b" ]]
+[connection signal="pressed" from="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/BuyBattleship" to="." method="add_ship_to_fleet" binds= [ "home_one" ]]
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_EnemySpawnTimer_timeout"]
+[connection signal="timeout" from="DifficultyIncreaseTimer" to="." method="_on_DifficultyIncreaseTimer_timeout"]
+[connection signal="timeout" from="LevelCompleteTimer" to="." method="_on_LevelCompleteTimer_timeout"]

@@ -1,0 +1,67 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://ships/player_ships/battleships/battleship.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ships/turrets/player/fire_spitter.tscn" type="PackedScene" id=2]
+[ext_resource path="res://images/battleships/star_razor.png" type="Texture" id=3]
+[ext_resource path="res://images/shields/rotation_shield.png" type="Texture" id=4]
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="StarRazor" instance=ExtResource( 1 )]
+max_health = 200.0
+
+[node name="CollisionPolygon2D" parent="." index="0"]
+polygon = PoolVector2Array( -28, -3, -26, -4, -25, -5, -22, -5, -21, -4, -20, -4, -18, -4, -18, -6, -16, -7, -10, -7, -10, -6, -5, -6, -5, -5, -4, -5, -2, -7, -1, -7, 0, -6, 1, -6, 2, -7, 3, -7, 4, -6, 5, -6, 6, -7, 7, -7, 8, -6, 9, -6, 10, -7, 11, -7, 12, -6, 13, -6, 14, -7, 15, -7, 16, -6, 16, -5, 21, -5, 21, -3, 25, -3, 25, -2, 28, -2, 28, -1, 26, -1, 26, 1, 28, 1, 28, 2, 25, 2, 25, 3, 21, 3, 21, 5, 16, 5, 16, 6, 15, 7, 14, 7, 13, 6, 12, 6, 11, 7, 10, 7, 9, 6, 8, 6, 7, 7, 6, 7, 5, 6, 4, 6, 3, 7, 2, 7, 1, 6, 0, 6, -1, 7, -2, 7, -4, 5, -5, 5, -5, 6, -10, 6, -10, 7, -16, 7, -18, 6, -18, 4, -21, 4, -22, 5, -25, 5, -26, 4, -28, 3, -28, 2, -26, 2, -26, 1, -25, 1, -25, -1, -26, -1, -26, -2, -28, -2 )
+
+[node name="Shield" parent="." index="1"]
+frames = SubResource( 5 )
+offset = Vector2( 16, 0 )
+
+[node name="CollisionPolygon2D" parent="Shield/Area2D" index="0"]
+position = Vector2( -20, 0 )
+polygon = PoolVector2Array( 39, -27, 41, -27, 46, -22, 50, -13, 52, -5, 52, 5, 50, 13, 46, 22, 41, 27, 39, 27, 39, 26, 40, 23, 47, 14, 49, 4, 49, -4, 47, -14, 40, -23, 39, -26 )
+
+[node name="Sprite" parent="." index="2"]
+texture = ExtResource( 3 )
+
+[node name="FireSpitter" parent="Turrets" index="0" instance=ExtResource( 2 )]
+position = Vector2( -1, -5 )
+
+[node name="FireSpitter2" parent="Turrets" index="1" instance=ExtResource( 2 )]
+position = Vector2( 7, -5 )
+
+[node name="FireSpitter3" parent="Turrets" index="2" instance=ExtResource( 2 )]
+position = Vector2( 15, -5 )
+
+[node name="FireSpitter4" parent="Turrets" index="3" instance=ExtResource( 2 )]
+position = Vector2( -1, 6 )
+
+[node name="FireSpitter5" parent="Turrets" index="4" instance=ExtResource( 2 )]
+position = Vector2( 7, 6 )
+
+[node name="FireSpitter6" parent="Turrets" index="5" instance=ExtResource( 2 )]
+position = Vector2( 15, 6 )
+
+[node name="Health" parent="." index="5"]
+margin_left = -15.0
+margin_top = 8.0
+margin_right = 15.0
+margin_bottom = 10.0
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 2 )
