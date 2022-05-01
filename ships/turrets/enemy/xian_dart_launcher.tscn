@@ -6,5 +6,5 @@
 
 [node name="XianDartLauncher" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-damage = 2.0
+damage = 1.0
 bullet = ExtResource( 3 )

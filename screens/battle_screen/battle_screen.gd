@@ -1,10 +1,13 @@
 extends Node
 
 onready var level_up_node = $GUILayer/LevelUp
+onready var experience_bar = $GUILayer/ExperienceBar
+onready var current_items_node = $GUILayer/CurrentItems
 
 func _ready():
-	get_node("GUILayer/BattleDebrief").hide()
 	get_tree().paused = false
+	experience_bar.max_value = Main.max_experience
+	$LevelCompleteTimer.wait_time = Main.battle_time_limit
 	setup_battlefield()
 
 func setup_battlefield():
@@ -53,7 +56,7 @@ func add_enemy_ship(p_enemy_ship):
 
 # Instead of splitting ships in ally and enemy ship types, ships are dynamically made ally or enemy, so any ship can be used.
 func add_ships():
-	add_ship(Main.star_razor_packed.instance(), "battleship", get_formation_position("battleship"), "player")
+	add_ship(Main.selected_battleship, "battleship", get_formation_position("battleship"), "player")
 
 func find_closest_target(turret, target_group):
 	var closest_target = get_tree().get_nodes_in_group(target_group).front()
@@ -92,28 +95,46 @@ func set_enemy_spawn_timer(time):
 	get_node("EnemySpawnTimer").wait_time = time
 
 func _process(delta):
-	$GUILayer/TimerLabel.text = Main.battle_time_limit - $LevelCompleteTimer.time_left
+	var minutes = int(Main.battle_time_limit - $LevelCompleteTimer.time_left) / 60
+	var seconds = int(Main.battle_time_limit - $LevelCompleteTimer.time_left) % 60
+	$GUILayer/TimerLabel.text = String(minutes) + ":" + String(seconds)
 
 func _add_bullet(bullet, global_pos, velocity_vector):
 	add_child(bullet)
 
 func _on_EnemySpawnTimer_timeout():
-	for i in rand_range(Main.current_wave["min_range"], Main.current_wave["max_range"]):
-		add_enemy_ship(Main.current_wave["ship_packed"].instance())
+	for i in Main.current_wave:
+		for j in rand_range(i["min_range"], i["max_range"]):
+			add_enemy_ship(i["ship_packed"].instance())
 
 func _on_DifficultyIncreaseTimer_timeout():
 	Main.increase_wave_difficulty()
 
-
 func _on_LevelCompleteTimer_timeout():
 	Main.win_condition()
 
-func _level_up():
+func level_up():
 	get_tree().paused = true
 	level_up_node.show()
+	level_up_node.fill_list()
+	level_up_node.update()
+
+func _add_current_items(item):
+	var amount = Items.current_items[item.item_id].amount + 1 if Items.current_items.has(item.item_id) else 1
+	if amount > 1:
+		Items.current_items[item.item_id].amount = amount
+		Items.current_items[item.item_id].texture_rect.hint_tooltip = String(Items.items[item.item_id].title) + " x" + String(Items.current_items[item.item_id].amount) + " : " + String(Items.items[item.item_id].description)
+	else:
+		var texture_rect = TextureRect.new()
+		Items.current_items[item.item_id] = {"texture_rect": texture_rect, "amount": amount}
+		texture_rect.texture = Items.items[item.item_id].icon
+		texture_rect.hint_tooltip = String(Items.items[item.item_id].title) + " x" + String(Items.current_items[item.item_id].amount) + " : " + String(Items.items[item.item_id].description)
+		texture_rect.name = item.item_id
+		current_items_node.add_child(texture_rect)
 
 func _on_LevelUp_item_selected(item):
 	level_up_node.hide()
-	Main.apply_level_up(item.item_id)
+	_add_current_items(item)
+	Items.apply_item(item.item_id)
 	level_up_node.clear_list()
 	get_tree().paused = false

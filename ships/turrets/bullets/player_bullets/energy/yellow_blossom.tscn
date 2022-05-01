@@ -33,3 +33,6 @@ animations = [ {
 frames = SubResource( 5 )
 frame = 2
 playing = true
+
+[node name="Explosion" parent="." index="3"]
+visible = true

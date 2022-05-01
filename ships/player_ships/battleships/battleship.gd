@@ -8,7 +8,7 @@ func activate_shield(shield_direction):
 	var collision = $Shield/Area2D/CollisionPolygon2D
 	var shield = $Shield
 	var angle = deg2rad(0)
-	shield.show()
+	var hidden = false
 	match shield_direction:
 		"up_right":
 			angle = deg2rad(-45)
@@ -27,8 +27,19 @@ func activate_shield(shield_direction):
 		"left":
 			angle = deg2rad(180)
 		"none":
-			shield.hide()
+			hidden = true
+	if hidden == true:
+		collision.disabled = true
+		shield.hide()
+	else:
+		shield.show()
+		collision.disabled = false
 	shield.rotation = angle
+
+func apply_damage(damage):
+	if health - damage <= 0:
+		emit_signal("check_for_win_condition", self)
+	.apply_damage(damage)
 
 func _process(delta):
 	if Input.is_action_pressed("shield_right") and Input.is_action_pressed("shield_up"):

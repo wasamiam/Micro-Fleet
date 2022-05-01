@@ -9,6 +9,12 @@ script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 
+[node name="Explosion" type="AnimatedSprite" parent="."]
+visible = false
+
 [node name="Timer" type="Timer" parent="."]
 
 [node name="Turrets" type="Node2D" parent="."]
+
+[node name="Engine" type="CPUParticles2D" parent="."]
+preprocess = 1.0

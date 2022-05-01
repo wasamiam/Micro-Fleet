@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Resource",
+"class": "Item",
+"language": "GDScript",
+"path": "res://items/item.gd"
+}, {
 "base": "Object",
 "class": "Ship_Generator",
 "language": "GDScript",
 "path": "res://utility_scripts/ship_generator.gd"
 } ]
 _global_script_class_icons={
+"Item": "",
 "Ship_Generator": ""
 }
 
@@ -36,6 +42,10 @@ window/size/width=640
 window/size/height=480
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
+
+[global]
+
+filter=false
 
 [gui]
 

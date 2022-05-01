@@ -10,6 +10,6 @@ damage = 10.0
 bullet = ExtResource( 3 )
 
 [node name="Timer" parent="." index="0"]
-wait_time = 0.1
+wait_time = 0.5
 
 [node name="Rotator" type="Node2D" parent="." index="1"]

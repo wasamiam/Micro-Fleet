@@ -8,13 +8,13 @@ var star_razor_packed = preload("res://ships/player_ships/battleships/star_razor
 var xian_dart_packed = preload("res://ships/enemy_ships/xian/xian_dart.tscn")
 
 var selected_battleship
-var item_list
 var waves = [[{"ship_packed":xian_dart_packed, "min_range":2, "max_range":5}]] # Add array of waves
 var current_wave
-var battle_time_limit
-var experience setget _set_experience
 
+onready var battle_time_limit = 600
+onready var experience = 0.0 setget _set_experience
 onready var max_experience = 100.0
+onready var damage_modifer = 1.0
 
 func save_game():
 	pass
@@ -32,8 +32,7 @@ func start_battle():
 	get_tree().change_scene_to(battle_screen_packed)
 
 func setup_new_game():
-	selected_battleship = star_razor_packed
-	battle_time_limit = 60.0
+	selected_battleship = star_razor_packed.instance()
 
 func win_condition():
 	get_tree().change_scene_to(win_screen_packed)
@@ -48,16 +47,16 @@ func restart_game():
 func increase_wave_difficulty():
 	if !Main.waves.empty():
 		current_wave = waves.pop_front()
-
-func get_random_items():
-	pass
-
-func apply_level_up(item_id):
-	pass
+	else:
+		for i in current_wave:
+			i["min_range"] += 1
+			i["max_range"] += 1
 
 func _set_experience(p_experience):
-	if p_experience > max_experience:
-		experience = 0.0
+	if p_experience >= max_experience:
+		experience = p_experience - max_experience
+		get_tree().current_scene.experience_bar.value = experience
 		get_tree().current_scene.level_up()
 	else:
 		experience = p_experience
+		get_tree().current_scene.experience_bar.value = p_experience

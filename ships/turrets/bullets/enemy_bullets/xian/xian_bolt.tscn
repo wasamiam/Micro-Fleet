@@ -31,5 +31,17 @@ animations = [ {
 
 [node name="AnimatedSprite" parent="." index="0"]
 frames = SubResource( 5 )
-frame = 2
+frame = 1
 playing = true
+
+[node name="Explosion" parent="." index="3"]
+visible = true
+emitting = false
+amount = 30
+lifetime = 0.1
+one_shot = true
+explosiveness = 0.67
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 100.0
+color = Color( 0.552941, 0.364706, 0.584314, 1 )

@@ -13,8 +13,20 @@ func _on_VisibilityNotifier2D_viewport_exited(viewport):
 
 func _on_Bullet_body_entered(body):
 	if body.has_method("apply_damage"):
-		body.apply_damage(damage)
-	queue_free()
+		body.apply_damage(damage * Main.damage_modifer)
+	$CollisionShape2D.set_deferred("disabled", true)
+	$AnimatedSprite.hide()
+	velocity_vector = Vector2(0,0)
+	$Explosion.show()
+	$Explosion.play()
 
 func _on_Bullet_area_entered(area):
+	$CollisionShape2D.set_deferred("disabled", true)
+	$AnimatedSprite.hide()
+	velocity_vector = Vector2(0,0)
+	$Explosion.show()
+	$Explosion.play()
+
+
+func _on_Explosion_animation_finished():
 	queue_free()
