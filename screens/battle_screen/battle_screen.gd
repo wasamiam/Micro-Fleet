@@ -3,7 +3,7 @@ extends Node
 onready var level_up_node = $GUILayer/LevelUp
 onready var experience_bar = $GUILayer/ExperienceBar
 onready var current_items_node = $GUILayer/CurrentItems
-onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 10.0
+onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 9.0
 
 func _ready():
 	get_tree().paused = false
