@@ -7,7 +7,6 @@ var damage
 func _process(delta):
 	position += velocity * velocity_vector * delta
 
-
 func _on_VisibilityNotifier2D_viewport_exited(viewport):
 	queue_free()
 

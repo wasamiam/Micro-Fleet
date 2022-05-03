@@ -38,7 +38,7 @@ animations = [ {
 } ]
 
 [node name="XianDart" instance=ExtResource( 1 )]
-max_health = 11.0
+max_health = 5.0
 
 [node name="CollisionPolygon2D" parent="." index="0"]
 polygon = PoolVector2Array( -12, -8, -10, -8, -5, -7, -2, -4, -1, -4, 1, -6, 8, -6, 10, -5, 12, -3, 12, 3, 10, 5, 8, 6, 1, 6, -1, 4, -2, 4, -5, 7, -10, 8, -12, 8, -12, 7, -9, 4, -6, 1, -6, -1, -12, -7 )

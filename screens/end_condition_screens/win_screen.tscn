@@ -1,10 +1,44 @@
-[gd_scene format=2]
+[gd_scene load_steps=11 format=2]
 
-[node name="Control" type="Control"]
+[ext_resource path="res://images/backgrounds/nebula_edge.png" type="Texture" id=1]
+[ext_resource path="res://themes/fonts/m3x6_header1.tres" type="DynamicFont" id=2]
+[ext_resource path="res://images/backgrounds/nebula_edge_top.png" type="Texture" id=3]
+[ext_resource path="res://images/shields/rotation_shield.png" type="Texture" id=4]
+[ext_resource path="res://images/battleships/star_razor.png" type="Texture" id=5]
+[ext_resource path="res://ships/turrets/player/fire_spitter.tscn" type="PackedScene" id=6]
+[ext_resource path="res://screens/end_condition_screens/win_screen.gd" type="Script" id=7]
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="WinScreen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource( 7 )
+
+[node name="Background" type="TextureRect" parent="."]
+margin_left = -1.88989
+margin_top = -158.12
+margin_right = 1278.11
+margin_bottom = 481.88
+texture = ExtResource( 1 )
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -13,14 +47,109 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 278.0
+margin_left = 287.0
 margin_top = 229.0
-margin_right = 361.0
-margin_bottom = 250.0
+margin_right = 353.0
+margin_bottom = 251.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
-margin_right = 83.0
-margin_bottom = 21.0
+margin_right = 66.0
+margin_bottom = 22.0
+custom_colors/font_color = Color( 0.90625, 0.894634, 0.162842, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "YOU WIN!"
+
+[node name="StarRazor" type="KinematicBody2D" parent="."]
+position = Vector2( 11.0007, 309.976 )
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StarRazor"]
+visible = false
+polygon = PoolVector2Array( -28, -3, -26, -4, -25, -5, -22, -5, -21, -4, -20, -4, -18, -4, -18, -6, -16, -7, -10, -7, -10, -6, -5, -6, -5, -5, -4, -5, -2, -7, -1, -7, 0, -6, 1, -6, 2, -7, 3, -7, 4, -6, 5, -6, 6, -7, 7, -7, 8, -6, 9, -6, 10, -7, 11, -7, 12, -6, 13, -6, 14, -7, 15, -7, 16, -6, 16, -5, 21, -5, 21, -3, 25, -3, 25, -2, 28, -2, 28, -1, 26, -1, 26, 1, 28, 1, 28, 2, 25, 2, 25, 3, 21, 3, 21, 5, 16, 5, 16, 6, 15, 7, 14, 7, 13, 6, 12, 6, 11, 7, 10, 7, 9, 6, 8, 6, 7, 7, 6, 7, 5, 6, 4, 6, 3, 7, 2, 7, 1, 6, 0, 6, -1, 7, -2, 7, -4, 5, -5, 5, -5, 6, -10, 6, -10, 7, -16, 7, -18, 6, -18, 4, -21, 4, -22, 5, -25, 5, -26, 4, -28, 3, -28, 2, -26, 2, -26, 1, -25, 1, -25, -1, -26, -1, -26, -2, -28, -2 )
+disabled = true
+
+[node name="Shield" type="AnimatedSprite" parent="StarRazor"]
+visible = false
+frames = SubResource( 5 )
+offset = Vector2( 16, 0 )
+
+[node name="Area2D" type="Area2D" parent="StarRazor/Shield"]
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StarRazor/Shield/Area2D"]
+position = Vector2( -20, 0 )
+polygon = PoolVector2Array( 39, -27, 41, -27, 46, -22, 50, -13, 52, -5, 52, 5, 50, 13, 46, 22, 41, 27, 39, 27, 40, 21, 43, 17, 43, 10, 39, 6, 39, -6, 43, -10, 43, -17, 40, -21 )
+disabled = true
+
+[node name="Sprite" type="Sprite" parent="StarRazor"]
+texture = ExtResource( 5 )
+
+[node name="Explosion" type="AnimatedSprite" parent="StarRazor"]
+visible = false
+
+[node name="Timer" type="Timer" parent="StarRazor"]
+wait_time = 0.6
+
+[node name="Health" type="ProgressBar" parent="StarRazor"]
+visible = false
+margin_left = -15.0
+margin_top = 8.0
+margin_right = 15.0
+margin_bottom = 10.0
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 2 )
+percent_visible = false
+
+[node name="Turrets" type="Node2D" parent="StarRazor"]
+visible = false
+
+[node name="FireSpitter" parent="StarRazor/Turrets" instance=ExtResource( 6 )]
+position = Vector2( -1, -5 )
+
+[node name="FireSpitter2" parent="StarRazor/Turrets" instance=ExtResource( 6 )]
+position = Vector2( 7, -5 )
+
+[node name="FireSpitter3" parent="StarRazor/Turrets" instance=ExtResource( 6 )]
+position = Vector2( 15, -5 )
+
+[node name="FireSpitter4" parent="StarRazor/Turrets" instance=ExtResource( 6 )]
+position = Vector2( -1, 6 )
+
+[node name="FireSpitter5" parent="StarRazor/Turrets" instance=ExtResource( 6 )]
+position = Vector2( 7, 6 )
+
+[node name="FireSpitter6" parent="StarRazor/Turrets" instance=ExtResource( 6 )]
+position = Vector2( 15, 6 )
+
+[node name="Engine" type="CPUParticles2D" parent="StarRazor"]
+position = Vector2( -25, 0 )
+amount = 50
+lifetime = 2.0
+preprocess = 1.0
+lifetime_randomness = 0.5
+emission_shape = 2
+emission_rect_extents = Vector2( 1, 2 )
+direction = Vector2( -1, 0 )
+spread = 10.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 10.0
+
+[node name="Foreground" type="TextureRect" parent="."]
+margin_left = -2.0
+margin_top = 228.5
+margin_right = 452.0
+margin_bottom = 481.5
+texture = ExtResource( 3 )
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2( 0.194153, 479.696 )
+rotation = -0.785398
+scale = Vector2( 1, 1 )
+amount = 200
+lifetime = 15.0
+preprocess = 15.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 50.0
+color = Color( 0.670588, 0.580392, 0.478431, 1 )

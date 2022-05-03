@@ -3,11 +3,12 @@ extends Node
 onready var level_up_node = $GUILayer/LevelUp
 onready var experience_bar = $GUILayer/ExperienceBar
 onready var current_items_node = $GUILayer/CurrentItems
+onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 10.0
 
 func _ready():
 	get_tree().paused = false
 	experience_bar.max_value = Main.max_experience
-	$LevelCompleteTimer.wait_time = Main.battle_time_limit
+	$LevelCompleteTimer.start(battle_time_limit)
 	setup_battlefield()
 
 func setup_battlefield():
@@ -95,17 +96,20 @@ func set_enemy_spawn_timer(time):
 	get_node("EnemySpawnTimer").wait_time = time
 
 func _process(delta):
-	var minutes = int(Main.battle_time_limit - $LevelCompleteTimer.time_left) / 60
-	var seconds = int(Main.battle_time_limit - $LevelCompleteTimer.time_left) % 60
+	var minutes = int(battle_time_limit - $LevelCompleteTimer.time_left) / 60
+	var seconds = int(battle_time_limit - $LevelCompleteTimer.time_left) % 60
 	$GUILayer/TimerLabel.text = String(minutes) + ":" + String(seconds)
 
 func _add_bullet(bullet, global_pos, velocity_vector):
 	add_child(bullet)
 
 func _on_EnemySpawnTimer_timeout():
-	for i in Main.current_wave:
-		for j in rand_range(i["min_range"], i["max_range"]):
-			add_enemy_ship(i["ship_packed"].instance())
+	for i in Main.current_wave["ships"]:
+		for j in randi() % i["max_range"] + i["min_range"]:
+			var ship = i["ship_packed"].instance()
+			ship.max_health += i["health_boost"]
+			ship.damage_boost += i["damage_boost"]
+			add_enemy_ship(ship)
 
 func _on_DifficultyIncreaseTimer_timeout():
 	Main.increase_wave_difficulty()
@@ -121,6 +125,9 @@ func level_up():
 
 func _add_current_items(item):
 	var amount = Items.current_items[item.item_id].amount + 1 if Items.current_items.has(item.item_id) else 1
+	if item.item_id == "nanites":
+		Items.current_items[item.item_id] = {"amount": amount}
+		return
 	if amount > 1:
 		Items.current_items[item.item_id].amount = amount
 		Items.current_items[item.item_id].texture_rect.hint_tooltip = String(Items.items[item.item_id].title) + " x" + String(Items.current_items[item.item_id].amount) + " : " + String(Items.items[item.item_id].description)
@@ -138,3 +145,20 @@ func _on_LevelUp_item_selected(item):
 	Items.apply_item(item.item_id)
 	level_up_node.clear_list()
 	get_tree().paused = false
+
+
+func _on_MissileSpawnTimer_timeout():
+	for i in randi() % 3 + 2:
+		var rocket_instance = Main.current_wave["rocket"].rocket_packed.instance()
+		get_tree().current_scene.add_child(rocket_instance)
+		rocket_instance.global_position = rand_position_in_rect($GUILayer/EnemySpawnLeft.rect_position, $GUILayer/EnemySpawnLeft.rect_size)
+		rocket_instance.damage = Main.current_wave["rocket"].damage
+		rocket_instance.velocity_vector = Vector2(1,0)
+
+
+func _on_MineSpawnTimer_timeout():
+	var mine_instance = Main.current_wave["mine"].mine_packed.instance()
+	get_tree().current_scene.add_child(mine_instance)
+	mine_instance.global_position = rand_position_in_rect($GUILayer/EnemySpawnRight.rect_position, $GUILayer/EnemySpawnRight.rect_size)
+	mine_instance.damage = Main.current_wave["mine"].damage
+	mine_instance.velocity_vector = Vector2(-1,0)

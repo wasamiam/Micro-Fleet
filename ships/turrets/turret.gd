@@ -7,9 +7,6 @@ export(float) var damage
 var firing
 var target
 
-func _ready():
-	pass
-
 func fire():
 	pass
 

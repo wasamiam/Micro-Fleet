@@ -1,6 +1,7 @@
 extends "res://ships/ship.gd"
 
 var final_position
+var damage_boost = 0.0
 
 func _ready():
 	$Line2D.add_point(Vector2(0,0))

@@ -4,6 +4,7 @@ signal item_selected(item)
 
 var item_card_packed = preload("res://screens/battle_screen/item_card.tscn")
 
+onready var nanite_texture = load("res://images/item_icons/nanites.png")
 onready var item_container = $PanelContainer/VBoxContainer/Items
 
 func add_item(item_id, title, icon, description):
@@ -17,6 +18,10 @@ func add_item(item_id, title, icon, description):
 
 func fill_list():
 	var items = Items.get_random_items(3)
+	if items.empty():
+		var item = Items.items["nanites"]
+		add_item(item.item_id, item.title, item.icon, item.description)
+		return
 	for i in items:
 		add_item(i.item_id, i.title, i.icon, i.description)
 

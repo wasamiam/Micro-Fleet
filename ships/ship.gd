@@ -49,7 +49,8 @@ func _set_health(p_health):
 
 func increase_firing_speed(speed_multiplier):
 	for i in $Turrets.get_children():
-		i.get_node("Timer").wait_time *= speed_multiplier
+		if !i.name == "neutralizer":
+			i.get_node("Timer").wait_time *= speed_multiplier
 
 func _on_Explosion_animation_finished():
 	queue_free()

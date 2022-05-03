@@ -6,12 +6,16 @@ var win_screen_packed = preload("res://screens/end_condition_screens/win_screen.
 var end_screen_packed = preload("res://screens/end_condition_screens/lose_screen.tscn")
 var star_razor_packed = preload("res://ships/player_ships/battleships/star_razor/star_razor.tscn")
 var xian_dart_packed = preload("res://ships/enemy_ships/xian/xian_dart.tscn")
+var mine_packed = preload("res://ships/turrets/bullets/enemy_bullets/mine.tscn")
+var rocket_packed = preload("res://ships/turrets/bullets/enemy_bullets/rocket.tscn")
+
 
 var selected_battleship
-var waves = [[{"ship_packed":xian_dart_packed, "min_range":2, "max_range":5}]] # Add array of waves
+var waves = [{"rocket":{"rocket_packed":rocket_packed, "damage":2.0}, "mine": {"mine_packed":mine_packed, "damage": 5.0}, "ships":[{"ship_packed":xian_dart_packed, "damage_boost":0.0, "health_boost": 0, "min_range":2, "max_range":3}]}] # Add array of waves
+var waves_left
 var current_wave
 
-onready var battle_time_limit = 600
+onready var wave_difficulty = 0
 onready var experience = 0.0 setget _set_experience
 onready var max_experience = 100.0
 onready var damage_modifer = 1.0
@@ -33,6 +37,11 @@ func start_battle():
 
 func setup_new_game():
 	selected_battleship = star_razor_packed.instance()
+	wave_difficulty = 0
+	experience = 0.0
+	damage_modifer = 1.0
+	waves_left = waves.duplicate(true)
+	Items.reset_items()
 
 func win_condition():
 	get_tree().change_scene_to(win_screen_packed)
@@ -42,15 +51,21 @@ func lose_condition():
 
 func restart_game():
 	save_game()
-	start_battle()
+	start_game()
 
 func increase_wave_difficulty():
-	if !Main.waves.empty():
-		current_wave = waves.pop_front()
+	wave_difficulty += 1
+	get_tree().current_scene.get_node("GUILayer/WaveDifficultyLabel").text = "Wave: " + String(wave_difficulty)
+	if !waves_left.empty():
+		current_wave = waves_left.pop_front()
 	else:
-		for i in current_wave:
+		for i in current_wave["ships"]:
 			i["min_range"] += 1
-			i["max_range"] += 1
+			i["max_range"] += 2
+			i["health_boost"] += 5
+			i["damage_boost"] += 2
+		current_wave["mine"].damage += 5.0
+		current_wave["rocket"].damage += 4.0
 
 func _set_experience(p_experience):
 	if p_experience >= max_experience:

@@ -1,9 +1,12 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://screens/main_menu/main_menu.gd" type="Script" id=1]
 [ext_resource path="res://themes/fonts/star_jedi_title.tres" type="DynamicFont" id=2]
 [ext_resource path="res://themes/fonts/retro_gaming_header1.tres" type="DynamicFont" id=3]
 [ext_resource path="res://themes/fonts/star_jedi_subtitle.tres" type="DynamicFont" id=4]
+[ext_resource path="res://images/backgrounds/empty_stars.png" type="Texture" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=6]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -20,29 +23,35 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
 
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2( 1280, 640 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 628.62, 309.591 )
+texture = ExtResource( 5 )
+
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_styles/panel = SubResource( 6 )
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 639.0
-margin_bottom = 479.0
+margin_right = 640.0
+margin_bottom = 480.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
-margin_right = 638.0
-margin_bottom = 478.0
+margin_right = 640.0
+margin_bottom = 480.0
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer2"]
-margin_right = 638.0
-margin_bottom = 50.0
-custom_constants/margin_top = 50
+margin_right = 640.0
+margin_bottom = 80.0
+custom_constants/margin_top = 80
 
 [node name="SubTitleLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer2"]
+visible = false
 margin_top = 54.0
 margin_right = 638.0
 margin_bottom = 86.0
@@ -52,24 +61,24 @@ text = "Galactic Conflict"
 align = 1
 
 [node name="TitleLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer2"]
-margin_top = 90.0
-margin_right = 638.0
-margin_bottom = 161.0
-custom_colors/font_color = Color( 0.992157, 1, 0, 1 )
+margin_top = 84.0
+margin_right = 640.0
+margin_bottom = 155.0
+custom_colors/font_color = Color( 0.945098, 1, 0, 1 )
 custom_fonts/font = ExtResource( 2 )
 text = "Micro Fleet"
 align = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
-margin_right = 638.0
-margin_bottom = 478.0
+margin_right = 640.0
+margin_bottom = 480.0
 custom_constants/separation = 100
 alignment = 1
 
 [node name="StartButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
-margin_top = 223.0
-margin_right = 638.0
-margin_bottom = 254.0
+margin_top = 224.0
+margin_right = 640.0
+margin_bottom = 255.0
 custom_colors/font_color_disabled = Color( 1, 1, 1, 0.0784314 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 0.513726, 0.513726, 0.513726, 1 )
