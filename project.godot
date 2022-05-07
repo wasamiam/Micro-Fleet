@@ -33,8 +33,9 @@ config/icon="res://icon.png"
 [autoload]
 
 FileManager="*res://globals/file_manager.gd"
-Main="*res://globals/main.gd"
 Items="*res://globals/items.gd"
+Signals="*res://globals/signals.gd"
+Main="*res://globals/main.gd"
 
 [display]
 

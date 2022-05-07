@@ -1,15 +1,27 @@
 extends Node
 
+onready var battleship_spawn_node = $BattleshipSpawn
+onready var enemy_spawn_area_top = $GUILayer/EnemySpawnTop
+onready var enemy_spawn_area_bottom = $GUILayer/EnemySpawnBottom
+onready var enemy_spawn_area_left = $GUILayer/EnemySpawnLeft
+onready var enemy_spawn_area_right = $GUILayer/EnemySpawnRight
 onready var level_up_node = $GUILayer/LevelUp
 onready var experience_bar = $GUILayer/ExperienceBar
 onready var current_items_node = $GUILayer/CurrentItems
+onready var level_complete_timer = $LevelCompleteTimer
+onready var timer_label_node = $GUILayer/TimerLabel
 onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 9.0
 
 func _ready():
 	get_tree().paused = false
 	experience_bar.max_value = Main.max_experience
-	$LevelCompleteTimer.start(battle_time_limit)
+	level_complete_timer.start(battle_time_limit)
 	setup_battlefield()
+
+func _process(delta):
+	var minutes = int(level_complete_timer.time_left) / 60
+	var seconds = int(level_complete_timer.time_left) % 60
+	timer_label_node.text = String(minutes) + ":" + String(seconds)
 
 func setup_battlefield():
 	Main.increase_wave_difficulty()
@@ -21,18 +33,16 @@ func rand_position_in_rect(p_rect_position, p_rect_size):
 func get_formation_position(ship_type):
 	match ship_type:
 		"battleship":
-			return get_node("BattleshipSpawn").position
+			return battleship_spawn_node.position
 		"enemy":
 			var rand = randi() % 2
 			var rect
 			match rand:
 				0:
-					rect = get_node("GUILayer/EnemySpawnTop")
+					rect = enemy_spawn_area_top
 				1:
-					rect = get_node("GUILayer/EnemySpawnBottom")
+					rect = enemy_spawn_area_bottom
 			return rand_position_in_rect(rect.rect_position, rect.rect_size)
-		"bomb":
-			return rand_position_in_rect(get_node("GUILayer/EnemySpawnRight").rect_position, get_node("GUILayer/EnemySpawnRight").rect_size)
 
 func add_ship(p_ship, ship_type, ship_position, ship_side):
 	var ship = p_ship
@@ -71,19 +81,6 @@ func check_for_win_condition(ship):
 	if ship.is_in_group("player") and get_tree().get_nodes_in_group("player").size() == 1:
 		Main.lose_condition()
 
-func _find_target(turret):
-	var target_side
-	if turret.get_parent().get_parent().is_in_group("player"):
-		if !get_tree().get_nodes_in_group("enemy").empty():
-			var targets = get_tree().get_nodes_in_group("enemy")
-			targets.shuffle()
-			turret.target = targets.front()
-			
-			#find_closest_target(turret, "enemy")
-	if turret.get_parent().get_parent().is_in_group("enemy"):
-		if !get_tree().get_nodes_in_group("player").empty():
-			turret.target = find_closest_target(turret, "player")
-
 func add_ship_to_fleet(ship):
 	if !Main.fleet.has(ship):
 		Main.fleet[ship] = 1
@@ -92,13 +89,23 @@ func add_ship_to_fleet(ship):
 	Main.level += 1
 	Main.start_battle()
 
-func set_enemy_spawn_timer(time):
-	get_node("EnemySpawnTimer").wait_time = time
+func level_up():
+	get_tree().paused = true
+	level_up_node.show()
+	level_up_node.fill_list()
+	level_up_node.update()
 
-func _process(delta):
-	var minutes = int(battle_time_limit - $LevelCompleteTimer.time_left) / 60
-	var seconds = int(battle_time_limit - $LevelCompleteTimer.time_left) % 60
-	$GUILayer/TimerLabel.text = String(minutes) + ":" + String(seconds)
+func _find_target(turret):
+	var nodes_in_enemy_group = get_tree().get_nodes_in_group("enemy")
+	var target_side
+	if turret.get_parent().get_parent().is_in_group("player"):
+		if !nodes_in_enemy_group.empty():
+			var targets = nodes_in_enemy_group
+			targets.shuffle()
+			turret.target = targets.front()
+	if turret.get_parent().get_parent().is_in_group("enemy"):
+		if !get_tree().get_nodes_in_group("player").empty():
+			turret.target = find_closest_target(turret, "player")
 
 func _add_bullet(bullet, global_pos, velocity_vector):
 	add_child(bullet)
@@ -116,12 +123,6 @@ func _on_DifficultyIncreaseTimer_timeout():
 
 func _on_LevelCompleteTimer_timeout():
 	Main.win_condition()
-
-func level_up():
-	get_tree().paused = true
-	level_up_node.show()
-	level_up_node.fill_list()
-	level_up_node.update()
 
 func _add_current_items(item):
 	var amount = Items.current_items[item.item_id].amount + 1 if Items.current_items.has(item.item_id) else 1
@@ -151,7 +152,7 @@ func _on_MissileSpawnTimer_timeout():
 	for i in randi() % 3 + 2:
 		var rocket_instance = Main.current_wave["rocket"].rocket_packed.instance()
 		get_tree().current_scene.add_child(rocket_instance)
-		rocket_instance.global_position = rand_position_in_rect($GUILayer/EnemySpawnLeft.rect_position, $GUILayer/EnemySpawnLeft.rect_size)
+		rocket_instance.global_position = rand_position_in_rect(enemy_spawn_area_left.rect_position, enemy_spawn_area_left.rect_size)
 		rocket_instance.damage = Main.current_wave["rocket"].damage
 		rocket_instance.velocity_vector = Vector2(1,0)
 
@@ -159,6 +160,6 @@ func _on_MissileSpawnTimer_timeout():
 func _on_MineSpawnTimer_timeout():
 	var mine_instance = Main.current_wave["mine"].mine_packed.instance()
 	get_tree().current_scene.add_child(mine_instance)
-	mine_instance.global_position = rand_position_in_rect($GUILayer/EnemySpawnRight.rect_position, $GUILayer/EnemySpawnRight.rect_size)
+	mine_instance.global_position = rand_position_in_rect(enemy_spawn_area_right.rect_position, enemy_spawn_area_right.rect_size)
 	mine_instance.damage = Main.current_wave["mine"].damage
 	mine_instance.velocity_vector = Vector2(-1,0)
