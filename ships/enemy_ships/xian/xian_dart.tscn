@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://ships/enemy_ships/enemy_ship.tscn" type="PackedScene" id=1]
+[ext_resource path="res://nodes/health.gd" type="Script" id=1]
 [ext_resource path="res://images/explosions/xian_explosion.png" type="Texture" id=2]
-[ext_resource path="res://ships/turrets/enemy/xian_dart_launcher.tscn" type="PackedScene" id=3]
+[ext_resource path="res://turrets/enemy/xian_dart_launcher.tscn" type="PackedScene" id=3]
 [ext_resource path="res://images/enemies/xian/xian_dart.png" type="Texture" id=4]
+[ext_resource path="res://ships/enemy_ships/enemy_ship.gd" type="Script" id=5]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -37,28 +38,40 @@ animations = [ {
 "speed": 15.0
 } ]
 
-[node name="XianDart" instance=ExtResource( 1 )]
-max_health = 5.0
+[node name="XianDart" type="KinematicBody2D"]
+collision_layer = 2
+script = ExtResource( 5 )
 
-[node name="CollisionPolygon2D" parent="." index="0"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( -12, -8, -10, -8, -5, -7, -2, -4, -1, -4, 1, -6, 8, -6, 10, -5, 12, -3, 12, 3, 10, 5, 8, 6, 1, 6, -1, 4, -2, 4, -5, 7, -10, 8, -12, 8, -12, 7, -9, 4, -6, 1, -6, -1, -12, -7 )
+disabled = true
 
-[node name="Sprite" parent="." index="1"]
+[node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 4 )
 
-[node name="Explosion" parent="." index="2"]
+[node name="Explosion" type="AnimatedSprite" parent="."]
+visible = false
 frames = SubResource( 7 )
 
-[node name="Timer" parent="." index="3"]
+[node name="Timer" type="Timer" parent="."]
 wait_time = 2.0
 
-[node name="XianDartLauncher" parent="Turrets" index="0" instance=ExtResource( 3 )]
+[node name="Line2D" type="Line2D" parent="."]
+width = 4.0
+default_color = Color( 1, 1, 1, 1 )
 
-[node name="Engine" parent="." index="7"]
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Turrets" type="Node2D" parent="."]
+
+[node name="XianDartLauncher" parent="Turrets" instance=ExtResource( 3 )]
+
+[node name="Engine" type="CPUParticles2D" parent="."]
 position = Vector2( -5, 0 )
 emitting = false
 amount = 50
 lifetime = 2.0
+preprocess = 1.0
 emission_shape = 2
 emission_rect_extents = Vector2( 1, 1 )
 direction = Vector2( -1, 0 )
@@ -68,4 +81,9 @@ initial_velocity = 10.0
 initial_velocity_random = 0.5
 color = Color( 0.560784, 0.972549, 0.886275, 1 )
 
+[node name="Health" type="Node" parent="."]
+script = ExtResource( 1 )
+max_health = 10.0
+
 [connection signal="animation_finished" from="Explosion" to="." method="_on_Explosion_animation_finished"]
+[connection signal="health_empty" from="Health" to="." method="_on_health_empty"]

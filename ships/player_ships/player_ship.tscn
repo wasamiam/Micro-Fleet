@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://ships/ship.tscn" type="PackedScene" id=1]
-
-[node name="PlayerShip" instance=ExtResource( 1 )]
-collision_mask = 2

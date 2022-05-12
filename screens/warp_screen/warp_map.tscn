@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://images/backgrounds/warp/warp.png" type="Texture" id=1]
+[ext_resource path="res://screens/warp_screen/warp_background.gd" type="Script" id=2]
+
+[node name="WarpMap" type="Node2D"]
+
+[node name="WarpBackground" type="ParallaxBackground" parent="."]
+script = ExtResource( 2 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="WarpBackground"]
+motion_mirroring = Vector2( 1280, 0 )
+
+[node name="Sprite" type="Sprite" parent="WarpBackground/ParallaxLayer"]
+texture = ExtResource( 1 )
+centered = false
+vframes = 4
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="WarpBackground"]
+motion_scale = Vector2( 1.5, 1 )
+motion_mirroring = Vector2( 1280, 0 )
+
+[node name="Sprite2" type="Sprite" parent="WarpBackground/ParallaxLayer2"]
+texture = ExtResource( 1 )
+centered = false
+vframes = 4
+frame = 1
+
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="WarpBackground"]
+motion_scale = Vector2( 3, 1 )
+motion_mirroring = Vector2( 1280, 0 )
+
+[node name="Sprite3" type="Sprite" parent="WarpBackground/ParallaxLayer3"]
+texture = ExtResource( 1 )
+centered = false
+vframes = 4
+frame = 2
+
+[node name="ParallaxLayer4" type="ParallaxLayer" parent="WarpBackground"]
+motion_scale = Vector2( 6, 1 )
+motion_mirroring = Vector2( 1280, 0 )
+
+[node name="Sprite4" type="Sprite" parent="WarpBackground/ParallaxLayer4"]
+texture = ExtResource( 1 )
+centered = false
+vframes = 4
+frame = 3

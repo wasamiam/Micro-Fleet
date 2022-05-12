@@ -13,13 +13,15 @@ onready var timer_label_node = $GUILayer/TimerLabel
 onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 9.0
 
 func _ready():
+	Signals.connect("target_needed", self, "_on_target_needed")
+	
 	get_tree().paused = false
 	experience_bar.max_value = Main.max_experience
 	level_complete_timer.start(battle_time_limit)
 	setup_battlefield()
 
-func _process(delta):
-	var minutes = int(level_complete_timer.time_left) / 60
+func _process(_delta):
+	var minutes = int(level_complete_timer.time_left / 60.0)
 	var seconds = int(level_complete_timer.time_left) % 60
 	timer_label_node.text = String(minutes) + ":" + String(seconds)
 
@@ -52,9 +54,9 @@ func add_ship(p_ship, ship_type, ship_position, ship_side):
 	ship.add_to_group(ship_side)
 	
 	ship.position = ship_position
-	ship.connect("check_for_win_condition", self, "check_for_win_condition")
-	ship.connect("find_target", self, "_find_target")
-	ship.connect("add_bullet", self, "_add_bullet")
+	if ship_side == "player":
+		ship.connect("check_for_win_condition", self, "check_for_win_condition")
+	#ship.connect("find_target", self, "_find_target")
 	add_child(ship)
 
 func add_enemy_ship(p_enemy_ship):
@@ -95,26 +97,24 @@ func level_up():
 	level_up_node.fill_list()
 	level_up_node.update()
 
-func _find_target(turret):
-	var nodes_in_enemy_group = get_tree().get_nodes_in_group("enemy")
-	var target_side
-	if turret.get_parent().get_parent().is_in_group("player"):
-		if !nodes_in_enemy_group.empty():
-			var targets = nodes_in_enemy_group
-			targets.shuffle()
-			turret.target = targets.front()
-	if turret.get_parent().get_parent().is_in_group("enemy"):
-		if !get_tree().get_nodes_in_group("player").empty():
-			turret.target = find_closest_target(turret, "player")
-
-func _add_bullet(bullet, global_pos, velocity_vector):
-	add_child(bullet)
+func _on_target_needed(targeter):
+	#var nodes_in_enemy_group = get_tree().get_nodes_in_group("enemy")
+	if targeter.get_parent().get_parent().get_parent().is_in_group("player"):
+		targeter.target = get_viewport().get_mouse_position()
+#		if !nodes_in_enemy_group.empty():
+#			var targets = nodes_in_enemy_group
+#			targets.shuffle()
+#			turret.target = targets.front()
+	if targeter.get_parent().get_parent().get_parent().is_in_group("enemy"):
+		targeter.target = Main.selected_battleship
+		#if !get_tree().get_nodes_in_group("player").empty():
+		#	targeter.target = find_closest_target(targeter.get_parent(), "player")
 
 func _on_EnemySpawnTimer_timeout():
 	for i in Main.current_wave["ships"]:
 		for j in randi() % i["max_range"] + i["min_range"]:
 			var ship = i["ship_packed"].instance()
-			ship.max_health += i["health_boost"]
+			ship.get_node("Health").max_health += i["health_boost"]
 			ship.damage_boost += i["damage_boost"]
 			add_enemy_ship(ship)
 

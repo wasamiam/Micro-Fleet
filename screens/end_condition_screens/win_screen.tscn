@@ -5,7 +5,7 @@
 [ext_resource path="res://images/backgrounds/nebula_edge_top.png" type="Texture" id=3]
 [ext_resource path="res://images/shields/rotation_shield.png" type="Texture" id=4]
 [ext_resource path="res://images/battleships/star_razor.png" type="Texture" id=5]
-[ext_resource path="res://ships/turrets/player/fire_spitter.tscn" type="PackedScene" id=6]
+[ext_resource path="res://turrets/player/fire_spitter.tscn" type="PackedScene" id=6]
 [ext_resource path="res://screens/end_condition_screens/win_screen.gd" type="Script" id=7]
 
 [sub_resource type="SpriteFrames" id=5]

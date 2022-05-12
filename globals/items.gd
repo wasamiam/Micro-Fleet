@@ -1,6 +1,6 @@
 extends Node
 
-var neutralizer_packed = preload("res://ships/turrets/player/neutralizer.tscn")
+var neutralizer_packed = preload("res://turrets/player/neutralizer.tscn")
 
 var items
 var possible_items
@@ -30,7 +30,7 @@ func apply_item(item_id):
 				neutralizer.name = "neutralizer"
 			Main.selected_battleship.get_node("Turrets/neutralizer").amount = current_items[item_id].amount
 		"nanites":
-			Main.selected_battleship.health += 20.0
+			Main.selected_battleship.get_node("Health").health += 20.0
 
 # Return as many as possible
 func get_random_items(p_number_of_items):

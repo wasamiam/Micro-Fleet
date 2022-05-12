@@ -6,8 +6,8 @@ var win_screen_packed = preload("res://screens/end_condition_screens/win_screen.
 var end_screen_packed = preload("res://screens/end_condition_screens/lose_screen.tscn")
 var star_razor_packed = preload("res://ships/player_ships/battleships/star_razor/star_razor.tscn")
 var xian_dart_packed = preload("res://ships/enemy_ships/xian/xian_dart.tscn")
-var mine_packed = preload("res://ships/turrets/bullets/enemy_bullets/mine.tscn")
-var rocket_packed = preload("res://ships/turrets/bullets/enemy_bullets/rocket.tscn")
+var mine_packed = preload("res://turrets/bullets/enemy_bullets/mine.tscn")
+var rocket_packed = preload("res://turrets/bullets/enemy_bullets/rocket.tscn")
 
 
 var selected_battleship
@@ -33,7 +33,8 @@ func start_game():
 	start_battle()
 
 func start_battle():
-	get_tree().change_scene_to(battle_screen_packed)
+	var error = get_tree().change_scene_to(battle_screen_packed)
+	assert(error == OK)
 
 func setup_new_game():
 	selected_battleship = star_razor_packed.instance()
@@ -44,10 +45,12 @@ func setup_new_game():
 	Items.reset_items()
 
 func win_condition():
-	get_tree().change_scene_to(win_screen_packed)
+	var error = get_tree().change_scene_to(win_screen_packed)
+	assert(error == OK)
 
 func lose_condition():
-	get_tree().change_scene_to(end_screen_packed)
+	var error = get_tree().change_scene_to(end_screen_packed)
+	assert(error == OK)
 
 func restart_game():
 	save_game()
@@ -60,12 +63,12 @@ func increase_wave_difficulty():
 		current_wave = waves_left.pop_front()
 	else:
 		for i in current_wave["ships"]:
-			i["min_range"] += 1
-			i["max_range"] += 2
-			i["health_boost"] += 5
-			i["damage_boost"] += 2
-		current_wave["mine"].damage += 5.0
-		current_wave["rocket"].damage += 4.0
+			#i["min_range"] += 1
+			#i["max_range"] += 2
+			i["health_boost"] += 10
+			#i["damage_boost"] += 1
+		#current_wave["mine"].damage += 1.0
+		#current_wave["rocket"].damage += 1.0
 
 func _set_experience(p_experience):
 	if p_experience >= max_experience:

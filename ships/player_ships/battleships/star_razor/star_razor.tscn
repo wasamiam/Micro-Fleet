@@ -1,9 +1,12 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://ships/player_ships/battleships/battleship.tscn" type="PackedScene" id=1]
-[ext_resource path="res://ships/turrets/player/fire_spitter.tscn" type="PackedScene" id=2]
+[ext_resource path="res://nodes/health.gd" type="Script" id=1]
+[ext_resource path="res://turrets/player/fire_spitter.tscn" type="PackedScene" id=2]
 [ext_resource path="res://images/battleships/star_razor.png" type="Texture" id=3]
 [ext_resource path="res://images/shields/rotation_shield.png" type="Texture" id=4]
+[ext_resource path="res://ships/player_ships/battleships/star_razor/star_razor.gd" type="Script" id=5]
+[ext_resource path="res://nodes/turret_manager.gd" type="Script" id=6]
+[ext_resource path="res://ships/player_ships/battleships/star_razor/over_shield.gd" type="Script" id=7]
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -23,56 +26,72 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 
-[node name="StarRazor" instance=ExtResource( 1 )]
-max_health = 100.0
+[node name="StarRazor" type="KinematicBody2D"]
+collision_mask = 2
+script = ExtResource( 5 )
 
-[node name="CollisionPolygon2D" parent="." index="0"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( -28, -3, -26, -4, -25, -5, -22, -5, -21, -4, -20, -4, -18, -4, -18, -6, -16, -7, -10, -7, -10, -6, -5, -6, -5, -5, -4, -5, -2, -7, -1, -7, 0, -6, 1, -6, 2, -7, 3, -7, 4, -6, 5, -6, 6, -7, 7, -7, 8, -6, 9, -6, 10, -7, 11, -7, 12, -6, 13, -6, 14, -7, 15, -7, 16, -6, 16, -5, 21, -5, 21, -3, 25, -3, 25, -2, 28, -2, 28, -1, 26, -1, 26, 1, 28, 1, 28, 2, 25, 2, 25, 3, 21, 3, 21, 5, 16, 5, 16, 6, 15, 7, 14, 7, 13, 6, 12, 6, 11, 7, 10, 7, 9, 6, 8, 6, 7, 7, 6, 7, 5, 6, 4, 6, 3, 7, 2, 7, 1, 6, 0, 6, -1, 7, -2, 7, -4, 5, -5, 5, -5, 6, -10, 6, -10, 7, -16, 7, -18, 6, -18, 4, -21, 4, -22, 5, -25, 5, -26, 4, -28, 3, -28, 2, -26, 2, -26, 1, -25, 1, -25, -1, -26, -1, -26, -2, -28, -2 )
 
-[node name="Shield" parent="." index="1"]
+[node name="OverShield" type="AnimatedSprite" parent="."]
 frames = SubResource( 5 )
 offset = Vector2( 16, 0 )
+script = ExtResource( 7 )
 
-[node name="CollisionPolygon2D" parent="Shield/Area2D" index="0"]
+[node name="Area2D" type="Area2D" parent="OverShield"]
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="OverShield/Area2D"]
 position = Vector2( -20, 0 )
 polygon = PoolVector2Array( 39, -27, 41, -27, 46, -22, 50, -13, 52, -5, 52, 5, 50, 13, 46, 22, 41, 27, 39, 27, 40, 21, 43, 17, 43, 10, 39, 6, 39, -6, 43, -10, 43, -17, 40, -21 )
 
-[node name="Sprite" parent="." index="2"]
+[node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 3 )
 
-[node name="Timer" parent="." index="4"]
+[node name="Explosion" type="AnimatedSprite" parent="."]
+visible = false
+
+[node name="Timer" type="Timer" parent="."]
 wait_time = 0.6
 
-[node name="Health" parent="." index="5"]
+[node name="HealthBar" type="ProgressBar" parent="."]
 margin_left = -15.0
 margin_top = 8.0
 margin_right = 15.0
 margin_bottom = 10.0
 custom_styles/fg = SubResource( 1 )
 custom_styles/bg = SubResource( 2 )
+percent_visible = false
 
-[node name="FireSpitter" parent="Turrets" index="0" instance=ExtResource( 2 )]
+[node name="Turrets" type="Node2D" parent="."]
+
+[node name="TurretManager" type="Node2D" parent="Turrets"]
+script = ExtResource( 6 )
+time_between_firing = 0.2
+
+[node name="FireSpitter" parent="Turrets/TurretManager" instance=ExtResource( 2 )]
 position = Vector2( -1, -5 )
 
-[node name="FireSpitter2" parent="Turrets" index="1" instance=ExtResource( 2 )]
+[node name="FireSpitter2" parent="Turrets/TurretManager" instance=ExtResource( 2 )]
 position = Vector2( 7, -5 )
 
-[node name="FireSpitter3" parent="Turrets" index="2" instance=ExtResource( 2 )]
+[node name="FireSpitter3" parent="Turrets/TurretManager" instance=ExtResource( 2 )]
 position = Vector2( 15, -5 )
 
-[node name="FireSpitter4" parent="Turrets" index="3" instance=ExtResource( 2 )]
+[node name="FireSpitter4" parent="Turrets/TurretManager" instance=ExtResource( 2 )]
 position = Vector2( -1, 6 )
 
-[node name="FireSpitter5" parent="Turrets" index="4" instance=ExtResource( 2 )]
+[node name="FireSpitter5" parent="Turrets/TurretManager" instance=ExtResource( 2 )]
 position = Vector2( 7, 6 )
 
-[node name="FireSpitter6" parent="Turrets" index="5" instance=ExtResource( 2 )]
+[node name="FireSpitter6" parent="Turrets/TurretManager" instance=ExtResource( 2 )]
 position = Vector2( 15, 6 )
 
-[node name="Engine" parent="." index="7"]
+[node name="Engine" type="CPUParticles2D" parent="."]
 position = Vector2( -25, 0 )
 amount = 50
 lifetime = 2.0
+preprocess = 1.0
 lifetime_randomness = 0.5
 emission_shape = 2
 emission_rect_extents = Vector2( 1, 2 )
@@ -80,3 +99,10 @@ direction = Vector2( -1, 0 )
 spread = 10.0
 gravity = Vector2( 0, 0 )
 initial_velocity = 10.0
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource( 1 )
+max_health = 100.0
+
+[connection signal="health_changed" from="Health" to="." method="_on_health_changed"]
+[connection signal="health_empty" from="Health" to="." method="_on_health_empty"]

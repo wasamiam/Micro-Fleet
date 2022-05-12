@@ -14,7 +14,12 @@ func add_item(item_id, title, icon, description):
 	item_card.get_node("MarginContainer/HBoxContainer/CenterContainer/MarginContainer/Icon").texture = icon
 	item_card.get_node("MarginContainer/HBoxContainer/Description").text = description
 	item_card.connect("item_selected", self, "_on_item_selected")
+	#	item_card.focus_neighbour_top = item_container_children.back()
 	item_container.add_child(item_card)
+	#var item_container_children = item_container.get_children()
+	if item_container.get_child_count() == 1:
+		item_card.grab_focus()
+	
 
 func fill_list():
 	var items = Items.get_random_items(3)

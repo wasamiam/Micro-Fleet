@@ -14,7 +14,7 @@ visible = false
 
 [node name="Timer" type="Timer" parent="."]
 
-[node name="Turrets" type="Node2D" parent="."]
+[node name="Turrets" type="Node" parent="."]
 
 [node name="Engine" type="CPUParticles2D" parent="."]
 preprocess = 1.0
