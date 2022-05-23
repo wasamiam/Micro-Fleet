@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ships/ship.tscn" type="PackedScene" id=1]
+[ext_resource path="res://images/player_ships/wave_runner.png" type="Texture" id=2]
+[ext_resource path="res://images/shields/wave_runner_shield.png" type="Texture" id=3]
+
+[node name="WaveRunner" instance=ExtResource( 1 )]
+collision_layer = 0
+collision_mask = 0
+script = null
+
+[node name="CollisionPolygon2D" parent="." index="0"]
+polygon = PoolVector2Array( -8, -16, -4, -16, 1, -14, 8, -6, 8, 6, 1, 14, -4, 16, -8, 16, -8, 14, -2, 9, -2, 7, -3, 7, -5, 4, -5, -4, -3, -7, -2, -7, -2, -9, -8, -14 )
+
+[node name="Shield" type="Sprite" parent="." index="1"]
+position = Vector2( -23, 0 )
+texture = ExtResource( 3 )
+
+[node name="DefenseRange" type="Area2D" parent="Shield" index="0"]
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Shield/DefenseRange" index="0"]
+polygon = PoolVector2Array( 3, -32, -1, -32, -16, -2, -16, 2, -1, 32, 3, 32, -11, 2, -11, -2 )
+
+[node name="Sprite" parent="." index="2"]
+texture = ExtResource( 2 )
+
+[node name="Engine" parent="." index="6"]
+position = Vector2( -5.65938, 0 )
+emission_rect_extents = Vector2( 1, 4 )

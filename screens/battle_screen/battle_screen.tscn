@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://images/backgrounds/empty_stars.png" type="Texture" id=1]
 [ext_resource path="res://screens/battle_screen/parallax_background.gd" type="Script" id=2]
@@ -20,6 +20,76 @@ bg_color = Color( 0.6, 0.6, 0.6, 0.513726 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 
+[sub_resource type="Animation" id=6]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/LevelUp:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 640, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "level_up_move_in"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/LevelUp:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.2, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 640, 0 ), Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GUILayer/LevelUp:pause_mode")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 2 ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "level_up_move_out"
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/LevelUp:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 640, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GUILayer/LevelUp:pause_mode")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+
 [sub_resource type="Animation" id=5]
 resource_name = "warp"
 tracks/0/type = "value"
@@ -35,7 +105,7 @@ tracks/0/keys = {
 "values": [ ExtResource( 1 ) ]
 }
 
-[node name="Node" type="Node"]
+[node name="BattleScreen" type="Node2D"]
 script = ExtResource( 18 )
 
 [node name="BackgroundLayer" type="CanvasLayer" parent="."]
@@ -55,13 +125,25 @@ centered = false
 [node name="BattleshipSpawn" type="Position2D" parent="."]
 position = Vector2( 320, 240 )
 
+[node name="IceBreakerSpawn" type="Position2D" parent="."]
+position = Vector2( 480, 240 )
+
+[node name="WaveRunnerSpawn" type="Position2D" parent="."]
+position = Vector2( 160, 240 )
+
+[node name="ShieldMaidenSpawn1" type="Position2D" parent="."]
+position = Vector2( 320, 160 )
+
+[node name="ShieldMaidenSpawn2" type="Position2D" parent="."]
+position = Vector2( 320, 320 )
+
 [node name="GUILayer" type="CanvasLayer" parent="."]
 pause_mode = 2
 
 [node name="ExperienceBar" type="ProgressBar" parent="GUILayer"]
 anchor_right = 1.0
 margin_bottom = 2.0
-rect_min_size = Vector2( 0, 8 )
+rect_min_size = Vector2( 0, 16 )
 custom_styles/fg = SubResource( 3 )
 percent_visible = false
 
@@ -69,9 +151,9 @@ percent_visible = false
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -20.0
-margin_top = 8.0
+margin_top = 15.5
 margin_right = 20.0
-margin_bottom = 29.0
+margin_bottom = 37.5
 grow_horizontal = 2
 grow_vertical = 2
 custom_fonts/font = ExtResource( 3 )
@@ -81,31 +163,48 @@ align = 1
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -44.0
-margin_top = 8.0
+margin_top = 16.0
 margin_right = -4.0
-margin_bottom = 30.0
+margin_bottom = 38.0
 grow_horizontal = 0
 grow_vertical = 0
 custom_fonts/font = ExtResource( 3 )
 
 [node name="CurrentItems" type="GridContainer" parent="GUILayer"]
 margin_left = 4.0
-margin_top = 12.0
+margin_top = 20.0
 margin_right = 68.0
-margin_bottom = 76.0
+margin_bottom = 84.0
 columns = 4
 
+[node name="CPUParticles2D" type="CPUParticles2D" parent="GUILayer"]
+position = Vector2( 320, 240 )
+emitting = false
+amount = 100
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.51
+lifetime_randomness = 1.0
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 200.0
+scale_amount = 2.0
+color = Color( 0, 1, 1, 1 )
+hue_variation = 0.15
+hue_variation_random = 1.0
+
 [node name="LevelUp" type="CenterContainer" parent="GUILayer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
+pause_mode = 2
+margin_left = 640.0
+margin_right = 1280.0
+margin_bottom = 480.0
 script = ExtResource( 4 )
 
 [node name="PanelContainer" type="PanelContainer" parent="GUILayer/LevelUp"]
-margin_left = 312.0
-margin_top = 236.0
-margin_right = 328.0
-margin_bottom = 244.0
+margin_left = 280.0
+margin_top = 223.0
+margin_right = 360.0
+margin_bottom = 257.0
 custom_styles/panel = SubResource( 4 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GUILayer/LevelUp/PanelContainer"]
@@ -185,40 +284,53 @@ text = "Buy Battleship"
 
 [node name="EnemySpawnTop" type="ReferenceRect" parent="GUILayer"]
 anchor_right = 1.0
-margin_left = 96.0
-margin_top = 16.0
-margin_right = -96.0
-margin_bottom = 128.0
+margin_left = 32.0
+margin_top = 32.0
+margin_right = -32.0
+margin_bottom = 96.0
 
 [node name="EnemySpawnBottom" type="ReferenceRect" parent="GUILayer"]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 96.0
-margin_top = -128.0
-margin_right = -96.0
-margin_bottom = -16.0
+margin_left = 32.0
+margin_top = -96.0
+margin_right = -32.0
+margin_bottom = -32.0
 
 [node name="EnemySpawnLeft" type="ReferenceRect" parent="GUILayer"]
 anchor_bottom = 1.0
-margin_left = -92.0
-margin_top = 236.0
+margin_left = -96.0
+margin_top = 232.0
 margin_right = -4.0
-margin_bottom = -236.0
+margin_bottom = -232.0
 
 [node name="EnemySpawnRight" type="ReferenceRect" parent="GUILayer"]
 anchor_bottom = 1.0
 margin_left = 648.0
-margin_top = 236.0
-margin_right = 656.0
-margin_bottom = -236.0
+margin_top = 228.0
+margin_right = 704.0
+margin_bottom = -228.0
+
+[node name="Controls" type="Label" parent="GUILayer"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -22.0
+custom_fonts/font = ExtResource( 3 )
+text = "Shield: WASD, Shoot: Mouse "
+align = 1
 
 [node name="EnemySpawnTimer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 7.0
 autostart = true
 
 [node name="DifficultyIncreaseTimer" type="Timer" parent="."]
-wait_time = 20.0
+wait_time = 30.0
+autostart = true
+
+[node name="WaveChangeTimer" type="Timer" parent="."]
+wait_time = 180.0
 autostart = true
 
 [node name="LevelCompleteTimer" type="Timer" parent="."]
@@ -234,6 +346,10 @@ wait_time = 13.0
 autostart = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+pause_mode = 2
+anims/RESET = SubResource( 6 )
+anims/level_up_move_in = SubResource( 7 )
+anims/level_up_move_out = SubResource( 8 )
 anims/warp = SubResource( 5 )
 
 [connection signal="item_selected" from="GUILayer/LevelUp" to="." method="_on_LevelUp_item_selected"]
@@ -242,6 +358,8 @@ anims/warp = SubResource( 5 )
 [connection signal="pressed" from="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/BuyBattleship" to="." method="add_ship_to_fleet" binds= [ "home_one" ]]
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_EnemySpawnTimer_timeout"]
 [connection signal="timeout" from="DifficultyIncreaseTimer" to="." method="_on_DifficultyIncreaseTimer_timeout"]
+[connection signal="timeout" from="WaveChangeTimer" to="." method="_on_WaveChangeTimer_timeout"]
 [connection signal="timeout" from="LevelCompleteTimer" to="." method="_on_LevelCompleteTimer_timeout"]
 [connection signal="timeout" from="MissileSpawnTimer" to="." method="_on_MissileSpawnTimer_timeout"]
 [connection signal="timeout" from="MineSpawnTimer" to="." method="_on_MineSpawnTimer_timeout"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

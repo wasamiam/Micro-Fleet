@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://ships/ship.tscn" type="PackedScene" id=1]
+[ext_resource path="res://images/player_ships/ice_breaker.png" type="Texture" id=2]
+[ext_resource path="res://ships/player_ships/ice_breaker.gd" type="Script" id=3]
+[ext_resource path="res://images/shields/ice_breaker_shield.png" type="Texture" id=4]
+
+[node name="IceBreaker" instance=ExtResource( 1 )]
+collision_mask = 2
+script = ExtResource( 3 )
+
+[node name="CollisionPolygon2D" parent="." index="0"]
+polygon = PoolVector2Array( -13, -7, -8, -7, -6, -5, 2, -5, 3, -4, 5, -4, 8, -8, 9, -8, 10, -6, 12, -3, 15, -1, 15, 1, 12, 3, 10, 6, 9, 8, 8, 8, 5, 4, 3, 4, 2, 5, -6, 5, -8, 7, -13, 7, -15, 4, -15, -4 )
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 2 )
+
+[node name="Engine" parent="." index="5"]
+position = Vector2( -14.573, -0.00867462 )
+emission_shape = 3
+emission_points = PoolVector2Array( 0, -3, 0, 3 )
+emission_colors = PoolColorArray(  )
+
+[node name="Shield" type="Sprite" parent="." index="6"]
+position = Vector2( 15, 0 )
+texture = ExtResource( 4 )
+
+[node name="Area2D" type="Area2D" parent="Shield" index="0"]
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Shield/Area2D" index="0"]
+polygon = PoolVector2Array( -4, -12, -2, -8, 3, -3, 8, -1, 8, 1, 3, 3, -2, 8, -4, 12, -6, 12, -6, 10, -3, 5, 2, 1, 2, -1, -3, -5, -6, -10, -6, -12 )

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://images/backgrounds/nebula_edge.png" type="Texture" id=1]
 [ext_resource path="res://themes/fonts/m3x6_header1.tres" type="DynamicFont" id=2]
@@ -7,6 +7,9 @@
 [ext_resource path="res://images/battleships/star_razor.png" type="Texture" id=5]
 [ext_resource path="res://turrets/player/fire_spitter.tscn" type="PackedScene" id=6]
 [ext_resource path="res://screens/end_condition_screens/win_screen.gd" type="Script" id=7]
+[ext_resource path="res://ships/player_ships/ice_breaker.tscn" type="PackedScene" id=8]
+[ext_resource path="res://ships/player_ships/shield_maiden.tscn" type="PackedScene" id=9]
+[ext_resource path="res://ships/player_ships/wave_runner.tscn" type="PackedScene" id=10]
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -62,7 +65,7 @@ custom_fonts/font = ExtResource( 2 )
 text = "YOU WIN!"
 
 [node name="StarRazor" type="KinematicBody2D" parent="."]
-position = Vector2( 11.0007, 309.976 )
+position = Vector2( -24.9993, 306.976 )
 collision_mask = 2
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StarRazor"]
@@ -136,6 +139,30 @@ spread = 10.0
 gravity = Vector2( 0, 0 )
 initial_velocity = 10.0
 
+[node name="WaveRunner" parent="." instance=ExtResource( 10 )]
+position = Vector2( -89, 307 )
+
+[node name="Shield" parent="WaveRunner" index="1"]
+visible = false
+
+[node name="ShieldMaiden" parent="." instance=ExtResource( 9 )]
+position = Vector2( -12, 275 )
+
+[node name="Shield" parent="ShieldMaiden" index="6"]
+visible = false
+
+[node name="ShieldMaiden2" parent="." instance=ExtResource( 9 )]
+position = Vector2( -28, 339 )
+
+[node name="Shield" parent="ShieldMaiden2" index="6"]
+visible = false
+
+[node name="IceBreaker" parent="." instance=ExtResource( 8 )]
+position = Vector2( 45, 307 )
+
+[node name="Shield" parent="IceBreaker" index="6"]
+visible = false
+
 [node name="Foreground" type="TextureRect" parent="."]
 margin_left = -2.0
 margin_top = 228.5
@@ -146,10 +173,14 @@ texture = ExtResource( 3 )
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 position = Vector2( 0.194153, 479.696 )
 rotation = -0.785398
-scale = Vector2( 1, 1 )
 amount = 200
 lifetime = 15.0
 preprocess = 15.0
 gravity = Vector2( 0, 0 )
 initial_velocity = 50.0
 color = Color( 0.670588, 0.580392, 0.478431, 1 )
+
+[editable path="WaveRunner"]
+[editable path="ShieldMaiden"]
+[editable path="ShieldMaiden2"]
+[editable path="IceBreaker"]

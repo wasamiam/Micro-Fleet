@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 onready var battleship_spawn_node = $BattleshipSpawn
 onready var enemy_spawn_area_top = $GUILayer/EnemySpawnTop
@@ -11,6 +11,8 @@ onready var current_items_node = $GUILayer/CurrentItems
 onready var level_complete_timer = $LevelCompleteTimer
 onready var timer_label_node = $GUILayer/TimerLabel
 onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 9.0
+onready var animation_player = $AnimationPlayer
+onready var particles2D = $GUILayer/CPUParticles2D
 
 func _ready():
 	Signals.connect("target_needed", self, "_on_target_needed")
@@ -28,6 +30,7 @@ func _process(_delta):
 func setup_battlefield():
 	Main.increase_wave_difficulty()
 	add_ships()
+	_on_EnemySpawnTimer_timeout()
 
 func rand_position_in_rect(p_rect_position, p_rect_size):
 	return Vector2(rand_range(p_rect_position.x, p_rect_position.x + p_rect_size.x), rand_range(p_rect_position.y, p_rect_position.y + p_rect_size.y))
@@ -59,13 +62,13 @@ func add_ship(p_ship, ship_type, ship_position, ship_side):
 	#ship.connect("find_target", self, "_find_target")
 	add_child(ship)
 
-func add_enemy_ship(p_enemy_ship):
+func add_enemy_ship(p_enemy_ship, ship_name):
 	var enemy_ship = p_enemy_ship
 	var ship_pos = get_formation_position("enemy")
 	if "final_position" in enemy_ship:
 		enemy_ship.final_position = ship_pos
 		ship_pos = Vector2(ship_pos.x - 640, ship_pos.y)
-	add_ship(enemy_ship, "dart", ship_pos, "enemy")
+	add_ship(enemy_ship, ship_name, ship_pos, "enemy")
 
 # Instead of splitting ships in ally and enemy ship types, ships are dynamically made ally or enemy, so any ship can be used.
 func add_ships():
@@ -93,9 +96,11 @@ func add_ship_to_fleet(ship):
 
 func level_up():
 	get_tree().paused = true
+	particles2D.emitting = true
 	level_up_node.show()
 	level_up_node.fill_list()
-	level_up_node.update()
+	animation_player.play("level_up_move_in")
+#	level_up_node.update()
 
 func _on_target_needed(targeter):
 	#var nodes_in_enemy_group = get_tree().get_nodes_in_group("enemy")
@@ -112,11 +117,12 @@ func _on_target_needed(targeter):
 
 func _on_EnemySpawnTimer_timeout():
 	for i in Main.current_wave["ships"]:
-		for j in randi() % i["max_range"] + i["min_range"]:
+		var max_amount = i["max_amount"] - get_tree().get_nodes_in_group(i["name"]).size()
+		for j in clamp(round(rand_range(i["min_range"], i["max_range"])), 0.0, max_amount):
 			var ship = i["ship_packed"].instance()
 			ship.get_node("Health").max_health += i["health_boost"]
 			ship.damage_boost += i["damage_boost"]
-			add_enemy_ship(ship)
+			add_enemy_ship(ship, i["name"])
 
 func _on_DifficultyIncreaseTimer_timeout():
 	Main.increase_wave_difficulty()
@@ -126,7 +132,7 @@ func _on_LevelCompleteTimer_timeout():
 
 func _add_current_items(item):
 	var amount = Items.current_items[item.item_id].amount + 1 if Items.current_items.has(item.item_id) else 1
-	if item.item_id == "nanites":
+	if item.item_id == "nanites" or item.item_id == "ice_breaker" or item.item_id == "wave_runner" or item.item_id == "shield_maiden":
 		Items.current_items[item.item_id] = {"amount": amount}
 		return
 	if amount > 1:
@@ -141,25 +147,31 @@ func _add_current_items(item):
 		current_items_node.add_child(texture_rect)
 
 func _on_LevelUp_item_selected(item):
-	level_up_node.hide()
 	_add_current_items(item)
 	Items.apply_item(item.item_id)
-	level_up_node.clear_list()
-	get_tree().paused = false
-
+	animation_player.play("level_up_move_out")
 
 func _on_MissileSpawnTimer_timeout():
-	for i in randi() % 3 + 2:
+	for i in randi() % Main.wave_difficulty + 4:
 		var rocket_instance = Main.current_wave["rocket"].rocket_packed.instance()
 		get_tree().current_scene.add_child(rocket_instance)
 		rocket_instance.global_position = rand_position_in_rect(enemy_spawn_area_left.rect_position, enemy_spawn_area_left.rect_size)
 		rocket_instance.damage = Main.current_wave["rocket"].damage
 		rocket_instance.velocity_vector = Vector2(1,0)
 
-
 func _on_MineSpawnTimer_timeout():
-	var mine_instance = Main.current_wave["mine"].mine_packed.instance()
-	get_tree().current_scene.add_child(mine_instance)
-	mine_instance.global_position = rand_position_in_rect(enemy_spawn_area_right.rect_position, enemy_spawn_area_right.rect_size)
-	mine_instance.damage = Main.current_wave["mine"].damage
-	mine_instance.velocity_vector = Vector2(-1,0)
+	for i in randi() % Main.wave_difficulty + 2:
+		var mine_instance = Main.current_wave["mine"].mine_packed.instance()
+		get_tree().current_scene.add_child(mine_instance)
+		mine_instance.global_position = rand_position_in_rect(enemy_spawn_area_right.rect_position, enemy_spawn_area_right.rect_size)
+		mine_instance.damage = Main.current_wave["mine"].damage
+		mine_instance.velocity_vector = Vector2(-1,0)
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "level_up_move_out":
+		level_up_node.clear_list()
+		level_up_node.hide()
+		get_tree().paused = false
+
+func _on_WaveChangeTimer_timeout():
+	Main.next_wave()

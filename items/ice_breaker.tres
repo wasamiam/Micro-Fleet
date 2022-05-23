@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://items/item.gd" type="Script" id=1]
+[ext_resource path="res://images/player_ships/ice_breaker.png" type="Texture" id=2]
+
+[resource]
+script = ExtResource( 1 )
+item_id = "ice_breaker"
+title = "Ice Breaker"
+description = "An ally ship will block incoming forward attacks."
+icon = ExtResource( 2 )
+max_stack = 1

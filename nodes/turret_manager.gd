@@ -22,6 +22,8 @@ func _ready():
 #		i.firing = p_firing
 
 func _on_timeout():
+	if not Input.is_action_pressed("fire"):
+		return
 	if firing_order.empty():
 		firing_order = get_children().duplicate(true)
 		firing_order.erase(timer)

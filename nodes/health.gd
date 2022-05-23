@@ -15,5 +15,9 @@ func apply_damage(damage:float):
 	if health <= 0:
 		emit_signal("health_empty")
 
+func heal(heal_amount:float):
+	health += heal_amount
+	emit_signal("health_changed")
+
 func reset():
 	health = max_health

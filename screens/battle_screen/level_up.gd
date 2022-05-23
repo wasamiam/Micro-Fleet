@@ -23,10 +23,10 @@ func add_item(item_id, title, icon, description):
 
 func fill_list():
 	var items = Items.get_random_items(3)
-	if items.empty():
-		var item = Items.items["nanites"]
-		add_item(item.item_id, item.title, item.icon, item.description)
-		return
+	#if items.empty():
+	#	var item = Items.items["nanites"]
+	#	add_item(item.item_id, item.title, item.icon, item.description)
+	#	return
 	for i in items:
 		add_item(i.item_id, i.title, i.icon, i.description)
 
@@ -35,4 +35,5 @@ func clear_list():
 		i.queue_free()
 
 func _on_item_selected(item):
+	
 	emit_signal("item_selected", item)

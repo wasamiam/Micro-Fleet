@@ -1,12 +1,29 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://turrets/bullet_turret.tscn" type="PackedScene" id=1]
 [ext_resource path="res://turrets/player/fire_spitter.gd" type="Script" id=2]
 [ext_resource path="res://turrets/bullets/player_bullets/energy/blue_blossom.tscn" type="PackedScene" id=3]
+[ext_resource path="res://images/turrets/battleship_turret.png" type="Texture" id=4]
+
+[sub_resource type="Animation" id=1]
+resource_name = "fire"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Rotator/Sprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -2, 0 ), Vector2( 0, 0 ) ]
+}
 
 [node name="FireSpitter" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-damage = 10.0
+damage = 5.0
 bullet = ExtResource( 3 )
 
 [node name="Timer" parent="." index="0"]
@@ -14,3 +31,10 @@ wait_time = 0.5
 autostart = false
 
 [node name="Rotator" type="Node2D" parent="." index="1"]
+
+[node name="Sprite" type="Sprite" parent="Rotator" index="0"]
+rotation = 1.5708
+texture = ExtResource( 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="2"]
+anims/fire = SubResource( 1 )

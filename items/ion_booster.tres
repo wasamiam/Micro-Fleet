@@ -7,6 +7,6 @@
 script = ExtResource( 1 )
 item_id = "ion_booster"
 title = "Ion Booster"
-description = "+10% damage to all weapons"
+description = "+50% damage to all weapons"
 icon = ExtResource( 2 )
 max_stack = 5
