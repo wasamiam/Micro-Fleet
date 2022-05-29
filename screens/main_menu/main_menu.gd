@@ -2,6 +2,9 @@ extends Control
 
 var battle_scene = preload("res://screens/battle_screen/battle_screen.tscn")
 
+func _ready():
+	$PanelContainer/MarginContainer/VBoxContainer/StartButton.grab_focus()
+
 func _on_StartButton_pressed():
 	Main.start_game()
 

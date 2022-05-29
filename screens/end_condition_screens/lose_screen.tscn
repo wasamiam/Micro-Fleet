@@ -1,7 +1,15 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://screens/end_condition_screens/lose_screen.gd" type="Script" id=1]
 [ext_resource path="res://themes/fonts/m3x6_header1.tres" type="DynamicFont" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=2]
 
 [node name="LoseScreen" type="Control"]
 anchor_right = 1.0
@@ -68,7 +76,13 @@ margin_right = 85.0
 margin_bottom = 39.0
 rect_min_size = Vector2( 64, 0 )
 size_flags_horizontal = 4
+custom_colors/font_color_focus = Color( 0.968627, 1, 0, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_fonts/font = ExtResource( 2 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/normal = SubResource( 2 )
 text = "Restart"
 
 [node name="Label" type="Label" parent="PanelContainer/CenterContainer/VBoxContainer/VBoxContainer"]

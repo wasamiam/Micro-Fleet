@@ -1,9 +1,11 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://images/backgrounds/empty_stars.png" type="Texture" id=1]
 [ext_resource path="res://screens/battle_screen/parallax_background.gd" type="Script" id=2]
 [ext_resource path="res://themes/fonts/m3x6_header1.tres" type="DynamicFont" id=3]
 [ext_resource path="res://screens/battle_screen/level_up.gd" type="Script" id=4]
+[ext_resource path="res://bosses/xian_boss.tscn" type="PackedScene" id=5]
+[ext_resource path="res://screens/battle_screen/pause_menu.gd" type="Script" id=6]
 [ext_resource path="res://screens/battle_screen/battle_screen.gd" type="Script" id=18]
 
 [sub_resource type="StyleBoxFlat" id=3]
@@ -33,6 +35,22 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Vector2( 640, 0 ) ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "enemy_approaching"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/EnemyApproaching:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.196078 ), Color( 1, 1, 1, 1 ) ]
 }
 
 [sub_resource type="Animation" id=7]
@@ -90,7 +108,140 @@ tracks/1/keys = {
 "values": [ 1 ]
 }
 
+[sub_resource type="Animation" id=9]
+resource_name = "move_in_boss"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("XianBoss:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 10 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -640, 0 ), Vector2( 0, 0 ) ]
+}
+
 [sub_resource type="Animation" id=5]
+resource_name = "warp"
+tracks/0/type = "value"
+tracks/0/path = NodePath("BackgroundLayer/ParallaxBackground/ParallaxLayer/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 1 ) ]
+}
+
+[sub_resource type="Animation" id=11]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/LevelUp:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 640, 0 ) ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "enemy_approaching"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/EnemyApproaching:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.196078 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=13]
+resource_name = "level_up_move_in"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/LevelUp:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.2, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 640, 0 ), Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GUILayer/LevelUp:pause_mode")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 2 ]
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "level_up_move_out"
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUILayer/LevelUp:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 640, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GUILayer/LevelUp:pause_mode")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "move_in_boss"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("XianBoss:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 10 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -640, 0 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=16]
 resource_name = "warp"
 tracks/0/type = "value"
 tracks/0/path = NodePath("BackgroundLayer/ParallaxBackground/ParallaxLayer/Sprite:texture")
@@ -321,6 +472,42 @@ custom_fonts/font = ExtResource( 3 )
 text = "Shield: WASD, Shoot: Mouse "
 align = 1
 
+[node name="EnemyApproaching" type="Label" parent="GUILayer"]
+visible = false
+anchor_right = 1.0
+margin_top = 32.0
+margin_bottom = 45.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = ExtResource( 3 )
+text = "Enemy Approaching!"
+align = 1
+
+[node name="PauseMenu" type="CenterContainer" parent="GUILayer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 6 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUILayer/PauseMenu"]
+margin_left = 275.0
+margin_top = 220.0
+margin_right = 364.0
+margin_bottom = 259.0
+
+[node name="Label" type="Label" parent="GUILayer/PauseMenu/VBoxContainer"]
+margin_right = 89.0
+margin_bottom = 22.0
+custom_fonts/font = ExtResource( 3 )
+text = "Paused"
+align = 1
+
+[node name="Label2" type="Label" parent="GUILayer/PauseMenu/VBoxContainer"]
+margin_top = 26.0
+margin_right = 89.0
+margin_bottom = 39.0
+text = "Press Space to Resume"
+align = 1
+
 [node name="EnemySpawnTimer" type="Timer" parent="."]
 wait_time = 7.0
 autostart = true
@@ -335,7 +522,7 @@ autostart = true
 
 [node name="LevelCompleteTimer" type="Timer" parent="."]
 wait_time = 600.0
-autostart = true
+one_shot = true
 
 [node name="MissileSpawnTimer" type="Timer" parent="."]
 wait_time = 7.0
@@ -345,12 +532,29 @@ autostart = true
 wait_time = 13.0
 autostart = true
 
+[node name="BossApproachingTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 pause_mode = 2
 anims/RESET = SubResource( 6 )
+anims/enemy_approaching = SubResource( 10 )
 anims/level_up_move_in = SubResource( 7 )
 anims/level_up_move_out = SubResource( 8 )
+anims/move_in_boss = SubResource( 9 )
 anims/warp = SubResource( 5 )
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 11 )
+anims/enemy_approaching = SubResource( 12 )
+anims/level_up_move_in = SubResource( 13 )
+anims/level_up_move_out = SubResource( 14 )
+anims/move_in_boss = SubResource( 15 )
+anims/warp = SubResource( 16 )
+
+[node name="XianBoss" parent="." instance=ExtResource( 5 )]
+visible = false
+position = Vector2( -640, 0 )
 
 [connection signal="item_selected" from="GUILayer/LevelUp" to="." method="_on_LevelUp_item_selected"]
 [connection signal="pressed" from="GUILayer/BattleDebrief/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/BuyCorvette" to="." method="add_ship_to_fleet" binds= [ "cr90" ]]
@@ -362,4 +566,7 @@ anims/warp = SubResource( 5 )
 [connection signal="timeout" from="LevelCompleteTimer" to="." method="_on_LevelCompleteTimer_timeout"]
 [connection signal="timeout" from="MissileSpawnTimer" to="." method="_on_MissileSpawnTimer_timeout"]
 [connection signal="timeout" from="MineSpawnTimer" to="." method="_on_MineSpawnTimer_timeout"]
+[connection signal="timeout" from="BossApproachingTimer" to="." method="_on_BossApproachingTimer_timeout"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="AnimationPlayer2" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="boss_destroyed" from="XianBoss" to="." method="_on_XianBoss_boss_destroyed"]

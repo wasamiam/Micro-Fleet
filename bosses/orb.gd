@@ -1,15 +1,24 @@
-extends Sprite
+extends "res://turrets/bullet_turret.gd"
 
+func fire():
+	var bullet_instance = bullet.instance()
+	get_tree().current_scene.add_child(bullet_instance)
+	bullet_instance.global_position = global_position
+	bullet_instance.damage = damage
+	bullet_instance.look_at(Main.selected_battleship.global_position)
+	bullet_instance.velocity_vector = bullet_instance.global_position.direction_to(Main.selected_battleship.global_position)
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+func _on_Health_health_changed():
+	$AnimationPlayer.play("on_hit")
 
+func _on_Health_health_empty():
+	$Timer.stop()
+	$Orb/Area2D.set_deferred("monitorable", false)
+	$Orb/Area2D.set_deferred("monitoring", false)
+	$Orb.hide()
+	$AnimationPlayer.play("destroyed")
+	
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-func start_firing():
-	pass
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "destroyed":
+		queue_free()

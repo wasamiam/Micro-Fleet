@@ -62,7 +62,7 @@ func increase_wave_difficulty():
 	wave_difficulty += 1
 	get_tree().current_scene.get_node("GUILayer/WaveDifficultyLabel").text = "Wave: " + String(wave_difficulty) # Turn into a signal
 	for i in current_wave["ships"]:
-		if i["name"] == "claw" and wave_difficulty < 5:
+		if i["name"] == "claw" and wave_difficulty < 7:
 			continue
 		i["min_range"] += 1
 		i["max_range"] += 2

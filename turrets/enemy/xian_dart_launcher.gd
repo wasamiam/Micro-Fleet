@@ -1,5 +1,8 @@
 extends "res://turrets/bullet_turret.gd"
 
+func _ready():
+	$Timer.start(rand_range(2.0, 4.0))
+
 func fire():
 	var target = $Targeter.target
 	if is_instance_valid(target):

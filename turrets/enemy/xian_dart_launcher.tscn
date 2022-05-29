@@ -12,6 +12,7 @@ bullet = ExtResource( 3 )
 
 [node name="Timer" parent="." index="0"]
 wait_time = 2.0
+autostart = false
 
 [node name="Targeter" type="Node" parent="." index="1"]
 script = ExtResource( 4 )

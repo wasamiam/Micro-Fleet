@@ -7,6 +7,6 @@
 script = ExtResource( 1 )
 item_id = "charge_cycler"
 title = "Charge Cycler"
-description = "Increase turret firing speed by 50%"
+description = "Increase turret firing speed by 25%"
 icon = ExtResource( 2 )
 max_stack = 2

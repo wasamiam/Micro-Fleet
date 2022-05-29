@@ -8,7 +8,7 @@
 
 [sub_resource type="Animation" id=1]
 resource_name = "on_hit"
-length = 0.3
+length = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Body:modulate")
 tracks/0/interp = 1
@@ -16,7 +16,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.3 ),
+"times": PoolRealArray( 0, 0.1, 0.2 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 100, 100, 100, 1 ), Color( 1, 1, 1, 1 ) ]
@@ -28,18 +28,21 @@ script = ExtResource( 5 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/on_hit = SubResource( 1 )
 
-[node name="Health" type="Node" parent="."]
-script = ExtResource( 4 )
-max_health = 500.0
-
 [node name="Body" type="Sprite" parent="."]
 texture = ExtResource( 3 )
 centered = false
 
 [node name="Area2D" type="Area2D" parent="Body"]
+collision_layer = 2
+monitoring = false
+monitorable = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Body/Area2D"]
 polygon = PoolVector2Array( 588, 408, 588, 407, 521, 421, 519, 429, 514, 435, 508, 438, 502, 438, 496, 435, 491, 429, 490, 426, 461, 430, 437, 432, 433, 441, 424, 447, 418, 447, 412, 444, 407, 438, 405, 432, 362, 432, 360, 437, 355, 443, 349, 446, 342, 446, 335, 442, 332, 437, 330, 429, 281, 426, 277, 433, 274, 436, 268, 439, 262, 439, 256, 436, 253, 433, 250, 427, 249, 421, 238, 419, 230, 416, 220, 413, 205, 410, 198, 417, 192, 420, 186, 420, 180, 417, 177, 414, 174, 408, 174, 401, 137, 384, 137, 354, 136, 352, 110, 339, 107, 339, 103, 343, 97, 346, 91, 346, 85, 343, 81, 339, 79, 334, 79, 328, 80, 324, 54, 311, 53, 272, 42, 270, 34, 266, 26, 259, 21, 249, 20, 245, 20, 235, 22, 228, 25, 223, 32, 215, 39, 211, 46, 209, 53, 208, 54, 169, 79, 155, 79, 146, 82, 140, 88, 135, 91, 134, 97, 134, 102, 136, 106, 140, 107, 141, 136, 128, 137, 126, 137, 96, 173, 79, 174, 69, 178, 63, 186, 59, 195, 60, 200, 63, 204, 70, 249, 58, 250, 52, 253, 45, 259, 41, 268, 40, 274, 43, 279, 48, 281, 53, 330, 51, 332, 41, 337, 36, 343, 33, 349, 33, 355, 36, 359, 40, 362, 48, 405, 48, 407, 40, 412, 35, 418, 32, 424, 32, 430, 35, 434, 39, 437, 45, 437, 48, 461, 49, 490, 54, 494, 45, 502, 41, 511, 42, 517, 46, 520, 51, 521, 54, 521, 59, 588, 73, 587, 71, 550, 49, 503, 24, 450, 7, 397, 0, 164, 0, 125, 9, 101, 16, 77, 7, 43, 7, 33, 15, 27, 21, 0, 57, 0, 423, 33, 465, 43, 473, 77, 473, 102, 464, 118, 470, 164, 480, 397, 480, 459, 471, 501, 457, 551, 431 )
+
+[node name="Health" type="Node" parent="Body/Area2D"]
+script = ExtResource( 4 )
+max_health = 2000.0
 
 [node name="Turrets" type="Node2D" parent="."]
 
@@ -113,10 +116,11 @@ hue_variation = -0.06
 hue_variation_random = 0.46
 
 [node name="HealthBar" type="ProgressBar" parent="."]
+visible = false
 anchor_right = 1.0
 margin_right = 640.0
 margin_bottom = 15.0
 value = 50.0
 
-[connection signal="health_changed" from="Health" to="." method="_on_Health_health_changed"]
-[connection signal="health_empty" from="Health" to="." method="_on_Health_health_empty"]
+[connection signal="health_changed" from="Body/Area2D/Health" to="." method="_on_Health_health_changed"]
+[connection signal="health_empty" from="Body/Area2D/Health" to="." method="_on_Health_health_empty"]

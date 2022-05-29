@@ -23,9 +23,9 @@ func apply_item(item_id):
 		possible_items.erase(item_id)
 	match item_id:
 		"ion_booster":
-			Main.damage_modifer += .5
+			Main.damage_modifer += .1
 		"charge_cycler":
-			Main.selected_battleship.increase_firing_speed(0.5)
+			Main.selected_battleship.increase_firing_speed(0.75)
 		"neutralizer":
 			if current_items[item_id].amount == 1:
 				var neutralizer = neutralizer_packed.instance()

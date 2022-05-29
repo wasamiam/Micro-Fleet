@@ -9,16 +9,19 @@ onready var level_up_node = $GUILayer/LevelUp
 onready var experience_bar = $GUILayer/ExperienceBar
 onready var current_items_node = $GUILayer/CurrentItems
 onready var level_complete_timer = $LevelCompleteTimer
+onready var boss_approaching_timer = $BossApproachingTimer
 onready var timer_label_node = $GUILayer/TimerLabel
-onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 9.0
+onready var battle_time_limit = $DifficultyIncreaseTimer.wait_time * 10.0
 onready var animation_player = $AnimationPlayer
 onready var particles2D = $GUILayer/CPUParticles2D
+onready var pause_menu = $GUILayer/PauseMenu
 
 func _ready():
 	Signals.connect("target_needed", self, "_on_target_needed")
 	
 	get_tree().paused = false
 	experience_bar.max_value = Main.max_experience
+	boss_approaching_timer.start(battle_time_limit - 10.0)
 	level_complete_timer.start(battle_time_limit)
 	setup_battlefield()
 
@@ -128,7 +131,21 @@ func _on_DifficultyIncreaseTimer_timeout():
 	Main.increase_wave_difficulty()
 
 func _on_LevelCompleteTimer_timeout():
-	Main.win_condition()
+	$EnemySpawnTimer.stop()
+	$DifficultyIncreaseTimer.stop()
+	$WaveChangeTimer.stop()
+	$LevelCompleteTimer.stop()
+	$MineSpawnTimer.stop()
+	$MissileSpawnTimer.stop()
+	
+	$GUILayer/ExperienceBar.hide()
+	$GUILayer/EnemyApproaching.hide()
+	
+	$XianBoss.show()
+	$XianBoss.activate_collision()
+	$AnimationPlayer2.stop()
+	$AnimationPlayer2.play("move_in_boss")
+	$XianBoss.start_firing()
 
 func _add_current_items(item):
 	var amount = Items.current_items[item.item_id].amount + 1 if Items.current_items.has(item.item_id) else 1
@@ -172,6 +189,15 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		level_up_node.clear_list()
 		level_up_node.hide()
 		get_tree().paused = false
+	if anim_name == "move_in_boss":
+		$XianBoss/HealthBar.show()
 
 func _on_WaveChangeTimer_timeout():
 	Main.next_wave()
+
+func _on_XianBoss_boss_destroyed():
+	Main.win_condition()
+
+func _on_BossApproachingTimer_timeout():
+	$GUILayer/EnemyApproaching.show()
+	$AnimationPlayer2.play("enemy_approaching")
